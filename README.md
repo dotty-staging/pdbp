@@ -35,7 +35,19 @@ to reproduce the issue.
 
 The issue happens when compiling `freeProgram` in [implicts.scala](https://github.com/PDBP/pdbp/blob/master/programInstances/src/main/scala/pdbp/program/instances/active/free/implicits.scala).
 
-FYI: you may wish to comment the code, change `clean.sh` and `publishLocal.sh`, and run [SimpleFactorialMain.scala](https://github.com/PDBP/pdbp/blob/master/mainExamples/src/main/scala/examples/main/active/effectfulReadingAndWriting/SimpleFactorialMain.scala) and
+I added imports
+
+```scala
+import pdbp.types.implicitUnit._
+import pdbp.types.implicitFunctionType._
+import pdbp.types.Thunk
+import pdbp.types.product.productType._
+```
+
+although I think they are not necessary (I am not sure about `pdbp.types.implicitFunctionType._`: you never know with implicit functions).
+
+FYI: 
+You may wish to comment out the problematic code, change `clean.sh` and `publishLocal.sh`, and run [SimpleFactorialMain.scala](https://github.com/PDBP/pdbp/blob/master/mainExamples/src/main/scala/examples/main/active/effectfulReadingAndWriting/SimpleFactorialMain.scala) and
 [FactorialMain.scala](https://github.com/PDBP/pdbp/blob/master/mainExamples/src/main/scala/examples/main/active/effectfulReadingAndWriting/FactorialMain.scala).
 They should work.
 
