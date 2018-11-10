@@ -3,7 +3,7 @@
 for f in $(find . -name "*.scala")
 do
 
-if [[ $f -ef ./programSyntax/src/main/scala/pdbp/computation/transformation/free/FreeTransformation.scala ]]
+if [[ $f -ef ./programSemanticsInstances/src/main/scala/pdbp/program/meaning/active/of/free/implicits.scala ]]
 # if [[ true ]]
 
 then
@@ -43,8 +43,11 @@ then
         $f -ef ./programInstances/src/main/scala/pdbp/program/instances/types/active/activeTypes.scala ||
         $f -ef ./programInstances/src/main/scala/pdbp/program/instances/utils/active/functionUtils.scala || 
         $f -ef ./programInstances/src/main/scala/pdbp/program/instances/active/implicits.scala ||
+        $f -ef ./programInstances/src/main/scala/pdbp/program/instances/types/active/free/freeActiveTypes.scala ||
+        $f -ef ./programInstances/src/main/scala/pdbp/program/instances/active/free/implicits.scala ||
 
         $f -ef ./programSemanticsInstances/src/main/scala/pdbp/program/meaning/active/of/active/implicits.scala ||
+        $f -ef ./programSemanticsInstances/src/main/scala/pdbp/program/meaning/active/of/free/implicits.scala ||
 
         $f -ef ./programRunners/src/main/scala/pdbp/program/runners/active/runner.scala ||
 
@@ -76,7 +79,8 @@ then
   elif [[ $f -ef ./programSyntax/src/main/scala/pdbp/computation/transformation/ComputationTransformation.scala ||
   
           
-          $f -ef ./programSemantics/src/main/scala/pdbp/computation/meaning/IdentityComputationMeaning.scala ]]
+          $f -ef ./programSemantics/src/main/scala/pdbp/computation/meaning/IdentityComputationMeaning.scala ||
+          $f -ef ./programSemantics/src/main/scala/pdbp/computation/meaning/of/free/tailrecFolding/ComputationMeaningTransformation.scala ]]
 
   then
     echo "scalafmt $f has problems with 'private[pdbp] trait '"

@@ -11,11 +11,6 @@ package pdbp.program.instances.active.free
 //  Program Description Based Programming Library
 //  author        Luc Duponcheel        2017-2018
 
-import pdbp.types.implicitUnit._
-import pdbp.types.implicitFunctionType._
-import pdbp.types.Thunk
-import pdbp.types.product.productType._
-
 import pdbp.program.Program
 
 import pdbp.computation.Computation
