@@ -1,4 +1,4 @@
-package pdbp.program.reading
+package pdbp.writable
 
 //       _______         __    __        _______
 //      / ___  /\       / /\  / /\      / ___  /\
@@ -11,21 +11,10 @@ package pdbp.program.reading
 //  Program Description Based Programming Library
 //  author        Luc Duponcheel        2017-2018
 
-import pdbp.types.implicitUnit._
-import pdbp.types.implicitFunctionType._
-import pdbp.types.Thunk
+import pdbp.types.const.constType._
 
-import pdbp.program.Function
-import pdbp.program.Composition
+// import pdbp.utils.functionUtils._
 
-trait Reading[R, >-->[- _, + _]] {
-  this: Function[>-->] & Composition[>-->] =>
+import pdbp.computation.Lifting
 
-  private[pdbp] val `u>-->r`: Unit >--> R
-
-  private[pdbp] def `z>-->r`[Z]: Z >--> R =
-    seqCompose(`z>-->u`, Thunk(`u>-->r`))
-
-  def read[Z]: Z >--> R = `z>-->r`
-
-}
+trait Writable[W] extends Startable[W] with Appendable[W] with Lifting[Const[W]]

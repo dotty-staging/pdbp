@@ -31,12 +31,12 @@ trait Function[>-->[- _, + _]] {
   def `z=>(y>-->z)`[Z, Y]: Z => (Y >--> Z) = { z =>
     function(`z=>(y=>z)`(z))
   }
-  
+
   def `z=>(u>-->z)`[Z]: Z => (Unit >--> Z) =
     `z=>(y>-->z)`[Z, Unit]
 
   def `z>-->u`[Z]: Z >--> Unit =
-    function(`z=>u`)    
+    function(`z=>u`)
 
   def `(z&&y)>-->z`[Z, Y]: (Z && Y) >--> Z =
     function(`(z&&y)=>z`)
@@ -49,6 +49,12 @@ trait Function[>-->[- _, + _]] {
 
   def `(z&&y&&x)>-->(y&&x)`[Z, Y, X]: (Z && Y && X) >--> (Y && X) =
     function(`(z&&y&&x)=>(y&&x)`)
+
+  def `(z&&y&&x)>-->(x&&y)`[Z, Y, X]: (Z && Y && X) >--> (X && Y) =
+    function(`(z&&y&&x)=>(x&&y)`) 
+
+  def `(u&&y)>-->y`[Y]: (Unit && Y) >--> Y =
+    `(z&&y)>-->y`[Unit, Y]      
 
   def `z>-->(z||y)`[Z, Y]: Z >--> (Z || Y) =
     function(`z=>(z||y)`)

@@ -1,4 +1,4 @@
-package pdbp.program.reading
+package pdbp.program
 
 //       _______         __    __        _______
 //      / ___  /\       / /\  / /\      / ___  /\
@@ -14,18 +14,23 @@ package pdbp.program.reading
 import pdbp.types.implicitUnit._
 import pdbp.types.implicitFunctionType._
 import pdbp.types.Thunk
+import pdbp.types.product.productType._
+import pdbp.types.kleisli.unary.kleisliUnaryTypeConstructorType._
 
-import pdbp.program.Function
-import pdbp.program.Composition
+import pdbp.computation.Lifting
 
-trait Reading[R, >-->[- _, + _]] {
-  this: Function[>-->] & Composition[>-->] =>
+private[pdbp] trait ProgramWithLifting[>-->[- _, + _]]
+    extends Program[>-->]
+    with Lifting[Kleisli[>-->]] {
 
-  private[pdbp] val `u>-->r`: Unit >--> R
+  private type C = Kleisli[>-->]
 
-  private[pdbp] def `z>-->r`[Z]: Z >--> R =
-    seqCompose(`z>-->u`, Thunk(`u>-->r`))
+  private[pdbp] override def lift0[Z]: Z => C[Z] =
+    `z=>(u>-->z)`
 
-  def read[Z]: Z >--> R = `z>-->r`
+  private[pdbp] override def lift2[Z, Y, X]
+    : ((Z && Y) => X) => (C[Z] && C[Y]) => C[X] = { `(z&&y)=>x` => (cy, cz) =>
+    seqCompose(product(cy, Thunk(cz)), Thunk(function(`(z&&y)=>x`)))
+  }
 
 }

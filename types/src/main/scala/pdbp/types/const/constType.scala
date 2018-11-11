@@ -1,4 +1,4 @@
-package pdbp.program.reading
+package pdbp.types.const
 
 //       _______         __    __        _______
 //      / ___  /\       / /\  / /\      / ___  /\
@@ -11,21 +11,8 @@ package pdbp.program.reading
 //  Program Description Based Programming Library
 //  author        Luc Duponcheel        2017-2018
 
-import pdbp.types.implicitUnit._
-import pdbp.types.implicitFunctionType._
-import pdbp.types.Thunk
+object constType {
 
-import pdbp.program.Function
-import pdbp.program.Composition
-
-trait Reading[R, >-->[- _, + _]] {
-  this: Function[>-->] & Composition[>-->] =>
-
-  private[pdbp] val `u>-->r`: Unit >--> R
-
-  private[pdbp] def `z>-->r`[Z]: Z >--> R =
-    seqCompose(`z>-->u`, Thunk(`u>-->r`))
-
-  def read[Z]: Z >--> R = `z>-->r`
+  type Const[X] = [+Z] => X
 
 }

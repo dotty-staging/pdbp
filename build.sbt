@@ -1,6 +1,6 @@
-val dottyVersion = "0.10.0-RC1"
 val pdbp = "pdbp"
 val pdbpVersion = "0.0.1"
+val dottyVersion = "0.10.0-RC1"
 
 lazy val commonSettings = Seq(
     organization := pdbp,
@@ -29,40 +29,68 @@ lazy val naturalTransformation = project
     name := "naturalTransformation"
   ).dependsOn(types) 
 
+lazy val liftingSyntax = project
+  .in(file("liftingSyntax"))
+  .settings(
+    commonSettings,
+    name := "liftingSyntax"
+  ).dependsOn(types, utils)   
+
 lazy val programSyntax = project
   .in(file("programSyntax"))
   .settings(
     commonSettings,
     name := "programSyntax"
-  ).dependsOn(types, utils, naturalTransformation)         
+  ).dependsOn(types, utils, naturalTransformation, liftingSyntax) 
+
+lazy val computationSyntax = project
+  .in(file("computationSyntax"))
+  .settings(
+    commonSettings,
+    name := "computationSyntax"
+  ).dependsOn(types, utils, naturalTransformation, liftingSyntax, programSyntax)           
+
+lazy val computationTransformations = project
+  .in(file("computationTransformations"))
+  .settings(
+    commonSettings,
+    name := "computationTransformations"
+  ).dependsOn(types, utils, naturalTransformation, programSyntax, computationSyntax) 
 
  lazy val programSemantics = project
   .in(file("programSemantics"))
   .settings(
     commonSettings,
     name := "programSemantics"
-  ).dependsOn(types, naturalTransformation, programSyntax)    
+  ).dependsOn(naturalTransformation, programSyntax)    
 
-lazy val programUtils = project
-  .in(file("programUtils"))
+ lazy val computationSemantics = project
+  .in(file("computationSemantics"))
   .settings(
     commonSettings,
-    name := "programUtils"
-  ).dependsOn(types, utils, programSyntax)   
+    name := "computationSemantics"
+  ).dependsOn(types, naturalTransformation, programSyntax, computationSyntax, computationTransformations, programSemantics) 
 
-lazy val programInstances = project
-  .in(file("programInstances"))
+lazy val mainProgramUtils = project
+  .in(file("mainProgramUtils"))
   .settings(
     commonSettings,
-    name := "programInstances"
-  ).dependsOn(types, programSyntax) 
+    name := "mainProgramUtils"
+  ).dependsOn(types, utils, programSyntax)     
+
+lazy val programSyntaxInstances = project
+  .in(file("programSyntaxInstances"))
+  .settings(
+    commonSettings,
+    name := "programSyntaxInstances"
+  ).dependsOn(types, programSyntax, computationSyntax, computationTransformations) 
 
 lazy val programSemanticsInstances = project
   .in(file("programSemanticsInstances"))
   .settings(
     commonSettings,
     name := "programSemanticsInstances"
-  ).dependsOn(programSemantics, programInstances)
+  ).dependsOn(programSemantics, computationSemantics, programSyntaxInstances)
 
 lazy val programRunners = project
   .in(file("programRunners"))
@@ -90,14 +118,14 @@ lazy val mainExampleUtils = project
   .settings(
     commonSettings,
     name := "mainExampleUtils"
-  ).dependsOn(programSyntax, programUtils)
+  ).dependsOn(programSyntax, mainProgramUtils)
 
 lazy val mainExamples = project
   .in(file("mainExamples"))
   .settings(
     commonSettings,
     name := "mainExamples"
-  ).dependsOn(programInstances, programSemanticsInstances, programRunners, programExamples, mainExampleUtils)   
+  ).dependsOn(programSyntaxInstances, programSemanticsInstances, programRunners, programExamples, mainExampleUtils)   
 
   
 
