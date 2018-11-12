@@ -51,10 +51,10 @@ trait Function[>-->[- _, + _]] {
     function(`(z&&y&&x)=>(y&&x)`)
 
   def `(z&&y&&x)>-->(x&&y)`[Z, Y, X]: (Z && Y && X) >--> (X && Y) =
-    function(`(z&&y&&x)=>(x&&y)`) 
+    function(`(z&&y&&x)=>(x&&y)`)
 
   def `(u&&y)>-->y`[Y]: (Unit && Y) >--> Y =
-    `(z&&y)>-->y`[Unit, Y]      
+    `(z&&y)>-->y`[Unit, Y]
 
   def `z>-->(z||y)`[Z, Y]: Z >--> (Z || Y) =
     function(`z=>(z||y)`)

@@ -1,4 +1,4 @@
-package pdbp.program.reading
+package pdbp.utils
 
 //       _______         __    __        _______
 //      / ___  /\       / /\  / /\      / ___  /\
@@ -11,19 +11,20 @@ package pdbp.program.reading
 //  Program Description Based Programming Library
 //  author        Luc Duponcheel        2017-2018
 
-import pdbp.types.implicitUnit._
-import pdbp.types.implicitFunctionType._
-import pdbp.types.Thunk
+import pdbp.types.product.productType._
+import pdbp.types.trying.tryType._
 
-import pdbp.program.Function
-import pdbp.program.Composition
+object tryingUtils {
 
-trait Reading[R, >-->[- _, + _]] {
-  this: Function[>-->] & Composition[>-->] =>
-
-  private[pdbp] val `u>-->r`: Unit >--> R
-
-  def read[Z]: Z >--> R =
-    seqCompose(`z>-->u`, Thunk(`u>-->r`))
+  def fold[Z, Y]: ((Z => Y) && (Throwable => Y)) => (Try[Z] => Y) = {
+    case (z2y, t2y) => {
+      case Ok(z) =>
+        val y = z2y(z)
+        y
+      case Ko(t) =>
+        val y = t2y(t)
+        y
+    }
+  }
 
 }

@@ -59,11 +59,11 @@ private[pdbp] trait StateTransformation[S, C[+ _]: Computation]
     }))
   }
 
-  override val `u>-->s`: Unit `=>STC` S = { u => s =>
+  override private[pdbp] val `u>-->s`: Unit `=>STC` S = { u => s =>
     resultC((s, s))
   }
 
-  override val `s>-->u`: S `=>STC` Unit = { s => _ =>
+  override private[pdbp] val `s>-->u`: S `=>STC` Unit = { s => _ =>
     resultC((s, ()))
   }
 

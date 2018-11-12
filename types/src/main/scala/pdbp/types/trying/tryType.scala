@@ -1,4 +1,4 @@
-package pdbp.program.reading
+package pdbp.types.trying
 
 //       _______         __    __        _______
 //      / ___  /\       / /\  / /\      / ___  /\
@@ -11,19 +11,14 @@ package pdbp.program.reading
 //  Program Description Based Programming Library
 //  author        Luc Duponcheel        2017-2018
 
-import pdbp.types.implicitUnit._
-import pdbp.types.implicitFunctionType._
-import pdbp.types.Thunk
+object tryType {
 
-import pdbp.program.Function
-import pdbp.program.Composition
+  case class Ok[+Z](z: Z)
+  case class Ko(t: Throwable)
 
-trait Reading[R, >-->[- _, + _]] {
-  this: Function[>-->] & Composition[>-->] =>
+  type Try[+Z] = Ok[Z] | Ko
 
-  private[pdbp] val `u>-->r`: Unit >--> R
-
-  def read[Z]: Z >--> R =
-    seqCompose(`z>-->u`, Thunk(`u>-->r`))
+  def ok[Z](z: Z): Try[Z] = Ok(z)
+  def ko[Z](t: Throwable): Try[Z] = Ko(t)
 
 }

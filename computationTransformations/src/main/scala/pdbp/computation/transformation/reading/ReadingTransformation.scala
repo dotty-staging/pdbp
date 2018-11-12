@@ -44,11 +44,11 @@ private[pdbp] trait ReadingTransformation[R, C[+ _]: Computation]
 
   import implicitComputation.{result => resultC, bind => bindC}
 
-  // override private[pdbp] val transform: C `~U~>` RTC = new {
-  //   override private[pdbp] def apply[Z](cz: C[Z]): RTC[Z] = {
-  //     cz
-  //   }
-  // }
+  override private[pdbp] val transform: C `~U~>` RTC = new {
+    override private[pdbp] def apply[Z](cz: C[Z]): RTC[Z] = {
+      cz
+    }
+  }
 
   override private[pdbp] def bind[Z, Y]
     : (RTC[Z] && Thunk[Z => RTC[Y]]) => RTC[Y] = { (rtcz, `z>=rtcy`) =>
@@ -57,7 +57,7 @@ private[pdbp] trait ReadingTransformation[R, C[+ _]: Computation]
     }))
   }
 
-  private[pdbp] override val `u>-->r`: Unit `=>RTC` R = { _ =>
+  override private[pdbp] val `u>-->r`: Unit `=>RTC` R = { _ =>
     resultC(implicitly)
   }
 

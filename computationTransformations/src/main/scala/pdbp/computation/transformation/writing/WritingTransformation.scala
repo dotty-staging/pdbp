@@ -67,7 +67,7 @@ private[pdbp] trait WritingTransformation[W: Writable, C[+ _]: Computation]
     }))
   }
 
-  private[pdbp] override val `w>-->u`: W `=>WTC` Unit = { w =>
+  override private[pdbp] val `w>-->u`: W `=>WTC` Unit = { w =>
     resultC((w, ()))
   }
 
