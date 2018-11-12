@@ -4,10 +4,14 @@
 /types/target/
 /utils/target/
 /naturalTransformation/target/
+/liftingSyntax/target/
 /programSyntax/target/
+/computationSyntax/target/
+/computationTransformations/target/
 /programSemantics/target/
-/programUtils/target/
-/programInstances/target/
+/computationSemantics/target/
+/mainProgramUtils/target/
+/programSyntaxInstances/target/
 /programSemanticsInstances/target/
 /programRunners/target/
 /programExampleUtils/target/
@@ -15,3 +19,10 @@
 /mainExampleUtils/target/
 /mainExamples/target/
 
+
+        
+
+
+
+        
+        
