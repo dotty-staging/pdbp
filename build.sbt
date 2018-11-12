@@ -1,5 +1,6 @@
 val pdbp = "pdbp"
 val pdbpVersion = "0.0.1"
+// val dottyVersion = "0.8.0"
 val dottyVersion = "0.11.0-bin-20181111-180c8df-NIGHTLY"
 
 lazy val commonSettings = Seq(
