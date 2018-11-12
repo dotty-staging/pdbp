@@ -3,9 +3,7 @@
 for f in $(find . -name "*.scala")
 do
 
-if [[ $f -ef ./computationTransformations/src/main/scala/pdbp/computation/transformation/reading/ComputationReadingTransformation.scala ||
-      $f -ef ./computationTransformations/src/main/scala/pdbp/computation/transformation/writing/ComputationWritingTransformation.scala ||
-      $f -ef ./computationTransformations/src/main/scala/pdbp/computation/transformation/state/ComputationStateTransformation.scala  ]]
+if [[ $f -ef ./computationTransformations/src/main/scala/pdbp/computation/transformation/delimiting/ControlTransformation.scala ]]
 # if [[ true ]]
 
 then
@@ -15,6 +13,7 @@ then
         $f -ef ./types/src/main/scala/pdbp/types/product/productType.scala ||
         $f -ef ./types/src/main/scala/pdbp/types/sum/sumType.scala ||
         $f -ef ./types/src/main/scala/pdbp/types/trying/tryType.scala ||
+        $f -ef ./types/src/main/scala/pdbp/types/prompt/Prompt.scala ||
         
         $f -ef ./utils/src/main/scala/pdbp/utils/functionUtils.scala ||
         $f -ef ./utils/src/main/scala/pdbp/utils/productUtils.scala ||
@@ -44,6 +43,7 @@ then
         $f -ef ./programSyntax/src/main/scala/pdbp/program/reading/Reading.scala ||
         $f -ef ./programSyntax/src/main/scala/pdbp/program/state/State.scala ||
         $f -ef ./programSyntax/src/main/scala/pdbp/program/failure/Failure.scala ||
+        $f -ef ./programSyntax/src/main/scala/pdbp/program/control/Control.scala ||
 
         $f -ef ./computationSyntax/src/main/scala/pdbp/computation/Computation.scala ||
         $f -ef ./computationSyntax/src/main/scala/pdbp/computation/Resulting.scala ||
@@ -164,7 +164,9 @@ then
 
   elif [[ $f -ef ./computationTransformations/src/main/scala/pdbp/computation/transformation/reading/ComputationReadingTransformation.scala ||
           $f -ef ./computationTransformations/src/main/scala/pdbp/computation/transformation/writing/ComputationWritingTransformation.scala ||
-          $f -ef ./computationTransformations/src/main/scala/pdbp/computation/transformation/state/ComputationStateTransformation.scala ]]
+          $f -ef ./computationTransformations/src/main/scala/pdbp/computation/transformation/state/ComputationStateTransformation.scala ||
+          $f -ef ./computationTransformations/src/main/scala/pdbp/computation/transformation/trying/ComputationFailureTransformation.scala ||
+          $f -ef ./computationTransformations/src/main/scala/pdbp/computation/transformation/delimiting/ControlTransformation.scala ]]
   
   then
     echo "WARNING: $f not formatted"

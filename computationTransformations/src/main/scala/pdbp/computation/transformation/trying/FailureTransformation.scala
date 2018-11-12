@@ -64,9 +64,9 @@ private[pdbp] trait FailureTransformation[C[+ _]: Computation]
     bindC(ttcz, Thunk(fold(`z=>ttcy`.eval, ko)))
   }
 
-  override private[pdbp] def failure[Z, Y]: Thunk[Z => Throwable] => Z `=>TTC` Y = {
-    `z=>t` => z =>
-      resultC(Ko(`z=>t`.eval(z)))
+  override private[pdbp] def failure[Z, Y]
+    : Thunk[Z => Throwable] => Z `=>TTC` Y = { `z=>t` => z =>
+    resultC(Ko(`z=>t`.eval(z)))
   }
 
   override def `try`[Z, Y]: (Z `=>TTC` Y) => Catch[Z, Y] = { `z=>ttcy` =>

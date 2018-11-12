@@ -34,7 +34,7 @@ private[pdbp] trait ComputationFailureTransformation[
 
   private type `=>T` = Kleisli[T]
 
-  override private[pdbp] def failure[Z, Y]: Thunk[Z => Throwable] => Z `=>T` Y  = { 
+  override private[pdbp] def failure[Z, Y]: Thunk[Z => Throwable] => Z `=>T` Y = { 
     `z=>t` =>
       transform(implicitFailure.failure(`z=>t`))
   } 
