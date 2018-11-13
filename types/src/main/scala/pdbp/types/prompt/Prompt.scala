@@ -11,4 +11,4 @@ package pdbp.types.prompt
 //  Program Description Based Programming Library
 //  author        Luc Duponcheel        2017-2018
 
-case class Prompt[A, +Z](l: Long)
+case class Prompt[A, -Z](l: Long)

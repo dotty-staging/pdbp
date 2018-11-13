@@ -3,7 +3,7 @@
 for f in $(find . -name "*.scala")
 do
 
-if [[ $f -ef ./computationTransformations/src/main/scala/pdbp/computation/transformation/delimiting/ControlTransformation.scala ]]
+if [[ $f -ef $f -ef ./computationTransformations/src/main/scala/pdbp/computation/transformation/delimiting/ControlTransformation.scala ]]
 # if [[ true ]]
 
 then
