@@ -3687,4 +3687,397 @@ the factorial value of the integer is
 402387260077093773543702433923003985719374864210714632543799910429938512398629020592044208486969404800479988610197196058631666872994808558901323829669944590997424504087073759918823627727188732519779505950995276120874975462497043601418278094646496291056393887437886487337119181045825783647849977012476632889835955735432513185323958463075557409114262417474349347553428646576611667797396668820291207379143853719588249808126867838374559731746136085379534524221586593201928090878297308431392844403281231558611036976801357304216168747609675871348312025478589320767169132448426236131412508780208000261683151027341827977704784635868170164365024153691398281264810213092761244896359928705114964975419909342221566832572080821333186116811553615836546984046708975602900950537616475847728421889679646244945160765353408198901385442487984959953319101723355556602139450399736280750137837615307127761926849034352625200015888535147331611702103968175921510907788019393178114194545257223865541461062892187960223838971476088506276862967146674697562911234082439208160153780889893964518263243671616762179168909779911903754031274622289988005195444414282012187361745992642956581746628302955570299024324153181617210465832036786906117260158783520751516284225540265170483304226143974286933061690897968482590125458327168226458066526769958652682272807075781391858178889652208164348344825993266043367660176999612831860788386150279465955131156552036093988180612138558600301435694527224206344631797460594682573103790084024432438465657245014402821885252470935190620929023136493273497565513958720559654228749774011413346962715422845862377387538230483865688976461927383814900140767310446640259899490222221765904339901886018566526485061799702356193897017860040811889729918311021171229845901641921068884387121855646124960798722908519296819372388642614839657382291123125024186649353143970137428531926649875337218940694281434118520158014123344828015051399694290153483077644569099073152433278288269864602789864321139083506217095002597389863554277196742822248757586765752344220207573630569498825087968928162753848863396909959826280956121450994871701244516461260379029309120889086942028510640182154399457156805941872748998094254742173582401063677404595741785160829230135358081840096996372524230560855903700624271243416909004153690105933983835777939410970027753472000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 ```
 
-We do not have stack which overflow for the argument `1000` any more since we use the heap now together with tail recursion (ok, we can have an out of memory exception, but that's another story).  
+We do not have stack which overflow for the argument `1000` any more since we use the heap now together with tail recursion (ok, we can have an out of memory exception, but that's another story). 
+
+## **`Reading` and `Writing`**
+
+`trait Program` describes the basic programming capabilities. 
+
+`trait Reading` and `trait Writing` describe I/O programming capabilities.
+
+Consider
+
+```scala
+package pdbp.program.reading
+
+import pdbp.types.implicitUnit._
+import pdbp.types.implicitFunctionType._
+import pdbp.types.Thunk
+
+import pdbp.program.Function
+import pdbp.program.Composition
+
+trait Reading[R, >-->[- _, + _]] {
+  this: Function[>-->] & Composition[>-->] =>
+
+  private[pdbp] val `u>-->r`: Unit >--> R
+
+  def read[Z]: Z >--> R =
+    seqCompose(`z>-->u`, Thunk(`u>-->r`))
+
+}
+``` 
+
+`` `u>-->r` `` is a program without arguments that yields result of type `R`.
+
+We also write that `` `u>-->r` `` is a producer of a result of type `R`. 
+We also write that `` `u>-->r` `` produces a value of type `R`. 
+We also write that `` `u>-->r` `` reads a value of type `R`. 
+
+Note that `` `u>-->r` `` is `private[pdbp]`.
+
+`read` as a program that transforms any argument to a result of type `R`.
+
+We also write that `read`  produces a result of type `R`. 
+We also write that `read` reads a value of type `R`. 
+
+Note that `read` is `public` (the default in `Dotty`), `read` is part of the `PDBP` programming DSL.
+
+Consider
+
+```scala
+package pdbp.program.writing
+
+import pdbp.types.implicitUnit._
+import pdbp.types.implicitFunctionType._
+import pdbp.types.Thunk
+import pdbp.types.product.productType._
+
+import pdbp.writable.Writable
+
+import pdbp.program.Function
+import pdbp.program.Composition
+import pdbp.program.Construction
+
+trait Writing[W: Writable, >-->[- _, + _]] {
+  this: Function[>-->] & Composition[>-->] & Construction[>-->] =>
+
+  private[pdbp] val `w>-->u`: W >--> Unit
+
+  def write[Z]: (Z => W) `I=>` Z >--> Unit =
+    seqCompose(function(implicitly), Thunk(`w>-->u`))
+
+  def writing[Z, Y, X]
+    : ((Z && Y) => X) => (Z >--> Y) => ((X => W) `I=>` Z >--> Y) = {
+    `(z&&y)=>x` => `z>-->y` =>
+      val `(z&&y)>-->x` = function(`(z&&y)=>x`)
+      val `z>-->(x&&y)` =
+        `let` {
+          `z>-->y`
+        } `in` {
+          `let` {
+            `(z&&y)>-->x`
+          } `in` {
+            `(z&&y&&x)>-->(x&&y)`
+          }
+        }
+      seqCompose(seqCompose(`z>-->(x&&y)`, Thunk(left(write))),
+                 Thunk(`(u&&y)>-->y`))
+  }
+
+}
+```
+
+ where
+
+ - `(z&&y&&x)>-->(x&&y)`
+ - `(u&&y)>-->y`
+
+ are the programs you expect
+
+```scala
+import pdbp.types.product.productType._
+import pdbp.types.sum.sumType._
+
+import pdbp.utils.functionUtils._
+import pdbp.utils.productUtils._
+import pdbp.utils.sumUtils._
+import pdbp.utils.productAndSumUtils._
+
+trait Function[>-->[- _, + _]] {
+
+  def `(z&&y&&x)>-->(x&&y)`[Z, Y, X]: (Z && Y && X) >--> (X && Y) =
+    function(`(z&&y&&x)=>(x&&y)`)
+
+  def `(u&&y)>-->y`[Y]: (Unit && Y) >--> Y =
+    `(z&&y)>-->y`[Unit, Y]
+
+}
+```
+
+where
+
+```scala
+package pdbp.utils
+
+import pdbp.types.implicitUnit._
+import pdbp.types.implicitFunctionType._
+import pdbp.types.Thunk
+import pdbp.types.product.productType._
+
+object productUtils {
+
+  def `(z&&y&&x)=>(x&&y)`[Z, Y, X]: (Z && Y && X) => (X && Y) = {
+    case ((_, y), x) => (x, y)
+  }
+}  
+```
+
+`Writable` is described later.
+
+`` `w>-->u` `` as a program with a writable argument that yields no result.
+
+We also write that `` `w>-->u` `` is a consumer of a writable argument of type `W`. 
+We also write that `` `w>-->u` `` consumes a writable argument of type `W`. 
+We also write that `` `w>-->u` `` writes a value of type `W`. 
+
+Note that `` `w>-->u` `` is `private[pdbp]`.
+
+`write` as a program with an implicitly writable argument that yields no result.
+
+We also write that `write` consumes an implicitly writable argument
+We also write that `write` writes an implicitly writable value.
+
+Note that `write` is `public` (the default in `Dotty`), `write` is part of the `PDBP` programming DSL.
+
+`writing` wraps a program of type `Z >--> Y` into a program of type `Z >--> Y` that also writes an implicitly writable value of type `X` that is the result of a function of type `(Z && Y) => X`.
+
+Note that the definition of `write` uses `implicitly[Z => W]` (we can also use an abbreviation `implicitly`) an evidence that the argument of `write` of type `Z` can implicitly be converted to a writable value of type `W`.
+
+## **`Writable`**
+
+Consider
+
+```scala
+package pdbp.writable
+
+import pdbp.types.const.constType._
+
+import pdbp.computation.Lifting
+
+trait Writable[W] extends Startable[W] with Appendable[W] with Lifting[Const[W]]
+```
+
+where
+
+```scala
+package pdbp.writable
+
+import pdbp.types.const.constType._
+
+import pdbp.computation.ObjectLifting
+
+private[pdbp] trait Startable[W] extends ObjectLifting[Const[W]] {
+
+  private[pdbp] val start: W
+
+  override private[pdbp] def lift0[Z]: Z => W = { _ =>
+    start
+  }
+
+}
+```
+
+and
+
+```scala
+package pdbp.writable
+
+import pdbp.types.product.productType._
+import pdbp.types.const.constType._
+
+import pdbp.computation.OperatorLifting
+
+private[pdbp] trait Appendable[W] extends OperatorLifting[Const[W]] {
+
+  private[pdbp] val append: W && W => W
+
+  override private[pdbp] def lift2[Z, Y, X]
+    : ((Z && Y) => X) => ((W && W) => W) = { _ =>
+    append
+  }
+
+}
+```
+
+The relationship with `Lifting` is defined in terms of the type `Const` below
+
+```scala
+package pdbp.types.const
+
+object constType {
+
+  type Const[X] = [+Z] => X
+
+}
+```
+
+`trait Writable` corresponds to monoids. 
+
+In 2008, Conor Mc Bride and Ross Paterson used idioms in `Haskell` and describe how monoids can be seen as as phantom idioms in 
+[idioms](http://strictlypositive.org/Idiom.pdf), 
+
+## **`ReadingTransformation` and `WritingTransformation`**
+
+The next computation transformations that we describe are `trait ReadingTransformation` and `trait WritingTransformation`.
+
+Consider
+
+```scala
+package pdbp.computation.transformation.reading
+
+import pdbp.types.implicitUnit._
+import pdbp.types.implicitFunctionType._
+import pdbp.types.Thunk
+import pdbp.types.product.productType._
+import pdbp.types.kleisli.binary.kleisliBinaryTypeConstructorType._
+
+import pdbp.naturalTransformation.unary.`~U~>`
+
+import pdbp.program.reading.Reading
+
+import pdbp.computation.Computation
+
+import pdbp.computation.transformation.ComputationTransformation
+
+private[pdbp] object ReadingTransformation {
+
+  private[pdbp] type ReadingTransformed[R, C[+ _]] = [+Z] => R `I=>` C[Z]
+
+}
+
+import ReadingTransformation._
+
+private[pdbp] trait ReadingTransformation[R, C[+ _]: Computation]
+    extends ComputationTransformation[C, ReadingTransformed[R, C]]
+    with Reading[R, Kleisli[ReadingTransformed[R, C]]] {
+
+  private type RTC = ReadingTransformed[R, C]
+  private type `=>RTC` = Kleisli[RTC]
+
+  private val implicitComputation = implicitly[Computation[C]]
+
+  import implicitComputation.{result => resultC, bind => bindC}
+
+  override private[pdbp] val transform: C `~U~>` RTC = new {
+    override private[pdbp] def apply[Z](cz: C[Z]): RTC[Z] = {
+      cz
+    }
+  }
+
+  override private[pdbp] def bind[Z, Y]
+    : (RTC[Z] && Thunk[Z => RTC[Y]]) => RTC[Y] = { (rtcz, `z>=rtcy`) =>
+    bindC(rtcz, Thunk({ z =>
+      `z>=rtcy`.eval(z)
+    }))
+  }
+
+  override private[pdbp] val `u>-->r`: Unit `=>RTC` R = { _ =>
+    resultC(implicitly[R])
+  }
+
+}
+```
+
+The types `RTC` and `` `=>RTC` ``, defined using `` `I=>` ``, indicate that the an implicitly available global value `implicitly[R]` is available. 
+In fact, in `` `u>-->r` `` we use it as `implicitly[R]` (we can also use it as the abbreviation `implicitly`).
+
+Note that `implicitly[R]` does not to be confused with `implicitly[Computation[C]]`. 
+
+You may wonder how on earth it is possible that the definitions above are so simple. 
+The magic of implicit function types is that the compiler can turn value types into implicit function types whenever it expects them to be, based upon available type information.
+
+By the way, the code above is a typical example where we push the limits of the `Dotty` type system.
+At a certain moment in time the `Dotty` type inferencer crashed for `transform`.
+I created an issue, [#5212](https://github.com/lampepfl/dotty/issues/5212), for it, and [Guillaume Martres](https://github.com/smarter) fixed it.
+I am proud that, since then, `PDBP` has been added to the `Dotty` [community build](https://github.com/lampepfl/dotty-community-build/pull/36).
+
+Consider
+
+```scala
+package pdbp.computation.transformation.writing
+
+//       _______         __    __        _______
+//      / ___  /\       / /\  / /\      / ___  /\
+//     / /__/ / / _____/ / / / /_/__   / /__/ / /
+//    / _____/ / / ___  / / / ___  /\ /____  / /
+//   / /\____\/ / /__/ / / / /__/ / / \___/ / /
+//  /_/ /      /______/ / /______/ /     /_/ /
+//  \_\/       \______\/  \______\/      \_\/
+//                                           v1.0
+//  Program Description Based Programming Library
+//  author        Luc Duponcheel        2017-2018
+
+import pdbp.types.implicitUnit._
+import pdbp.types.implicitFunctionType._
+import pdbp.types.Thunk
+import pdbp.types.product.productType._
+import pdbp.types.kleisli.binary.kleisliBinaryTypeConstructorType._
+
+import pdbp.writable.Writable
+
+import pdbp.naturalTransformation.unary.`~U~>`
+
+import pdbp.program.Program
+import pdbp.program.writing.Writing
+
+import pdbp.computation.Computation
+
+import pdbp.computation.transformation.ComputationTransformation
+
+private[pdbp] object WritingTransformation {
+
+  private[pdbp] type WritingTransformed[W, C[+ _]] = [+Z] => C[W && Z]
+
+}
+
+import WritingTransformation._
+
+private[pdbp] trait WritingTransformation[W: Writable, C[+ _]: Computation]
+    extends ComputationTransformation[C, WritingTransformed[W, C]]
+    with Writing[W, Kleisli[WritingTransformed[W, C]]] {
+
+  private type WTC = WritingTransformed[W, C]
+  private type `=>WTC` = Kleisli[WTC]
+
+  private val implicitComputation = implicitly[Computation[C]]
+
+  import implicitComputation.{bind => bindC, result => resultC}
+
+  private val implicitWritable = implicitly[Writable[W]]
+
+  import implicitWritable._
+
+  override private[pdbp] val transform: C `~U~>` WTC = new {
+    override private[pdbp] def apply[Z](cz: C[Z]): WTC[Z] =
+      bindC(cz, Thunk({ z =>
+        resultC((start, z))
+      }))
+  }
+
+  override private[pdbp] def bind[Z, Y]
+    : (WTC[Z] && Thunk[Z => WTC[Y]]) => WTC[Y] = { (wtcz, `z=>wtcy`) =>
+    bindC(wtcz, Thunk({ (leftW, z) =>
+      bindC(`z=>wtcy`.eval(z), Thunk({ (rightW, y) =>
+        resultC(append(leftW, rightW), y)
+      }))
+    }))
+  }
+
+  override private[pdbp] val `w>-->u`: W `=>WTC` Unit = { w =>
+    resultC((w, ()))
+  }
+
+}
+```
+
+Note that `transform` resp. `bind` make use of `start` resp. `append`.
+
+
+
+
+
+
+
+
+

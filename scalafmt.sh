@@ -3,10 +3,13 @@
 for f in $(find . -name "*.scala")
 do
 
-if [[ $f -ef $f -ef ./computationTransformations/src/main/scala/pdbp/computation/transformation/delimiting/ControlTransformation.scala ]]
-# if [[ true ]]
+###############################################################################################################################################################
 
-then
+  if [[ $f -ef ./computationTransformations/src/main/scala/pdbp/computation/transformation/free/FreeTransformation.scala ||
+        $f -ef ./computationTransformations/src/main/scala/pdbp/computation/transformation/reading/ReadingTransformation.scala ]]
+  # if [[ true ]]
+
+  then
 
   if [[ $f -ef ./types/src/main/scala/pdbp/types/implicitUnit.scala ||
         $f -ef ./types/src/main/scala/pdbp/types/Thunk.scala ||
@@ -53,11 +56,19 @@ then
 
         $f -ef ./mainProgramUtils/src/main/scala/pdbp/program/utils/EffectfulUtils.scala ||
 
-        $f -ef ./programSyntaxInstances/src/main/scala/pdbp/program/instances/types/active/activeTypes.scala ||
+        $f -ef ./liftingSyntaxInstances/src/main/scala/pdbp/writable/instances/toConsoleWriting/types/ToConsoleWriting.scala ||
+        $f -ef ./liftingSyntaxInstances/src/main/scala/pdbp/writable/instances/toConsoleWriting/implicits.scala ||
+
         $f -ef ./programSyntaxInstances/src/main/scala/pdbp/program/instances/utils/active/functionUtils.scala || 
-        $f -ef ./programSyntaxInstances/src/main/scala/pdbp/program/instances/active/implicits.scala ||
+        $f -ef ./programSyntaxInstances/src/main/scala/pdbp/program/instances/types/active/activeTypes.scala ||
         $f -ef ./programSyntaxInstances/src/main/scala/pdbp/program/instances/types/active/free/freeActiveTypes.scala ||
+        $f -ef ./programSyntaxInstances/src/main/scala/pdbp/program/instances/types/active/reading/readingActiveTypes.scala ||
+        $f -ef ./programSyntaxInstances/src/main/scala/pdbp/program/instances/types/active/writing/writingActiveTypes.scala ||
+        $f -ef ./programSyntaxInstances/src/main/scala/pdbp/program/instances/types/active/writing/reading/readingWritingActiveTypes.scala ||
+        $f -ef ./programSyntaxInstances/src/main/scala/pdbp/program/instances/active/reading/ReadingProgram.scala ||
         $f -ef ./programSyntaxInstances/src/main/scala/pdbp/program/instances/active/free/implicits.scala ||
+        $f -ef ./programSyntaxInstances/src/main/scala/pdbp/program/instances/active/implicits.scala ||
+        $f -ef ./programSyntaxInstances/src/main/scala/pdbp/program/instances/active/writing/toConsoleWriting/implicits.scala ||
 
         $f -ef ./programSemanticsInstances/src/main/scala/pdbp/program/meaning/active/of/active/implicits.scala ||
         $f -ef ./programSemanticsInstances/src/main/scala/pdbp/program/meaning/active/of/free/implicits.scala ||
@@ -77,6 +88,8 @@ then
     echo "scalafmt $f"
     scalafmt $f 
 
+###############################################################################################################################################################
+
   elif [[ $f -ef ./programSyntax/src/main/scala/pdbp/examples/ProductInTermsOfLetAndIn.scala ||
           $f -ef ./programSyntax/src/main/scala/pdbp/examples/SumInTermsOfIfAndElse.scala ||
           $f -ef ./programSyntax/src/main/scala/pdbp/program/writing/Writing.scala ||
@@ -91,6 +104,8 @@ then
     scalafmt $f
     sed -i "s/class /trait /g" $f
 
+###############################################################################################################################################################
+
   elif [[ $f -ef ./types/src/main/scala/pdbp/types/implicitFunctionType.scala ||
           $f -ef ./types/src/main/scala/pdbp/types/const/constType.scala ]]
   
@@ -100,17 +115,23 @@ then
     scalafmt $f
     sed -i "s/\/\/type /type /g" $f    
 
+###############################################################################################################################################################
+
   elif [[ $f -ef ./computationTransformations/src/main/scala/pdbp/computation/transformation/ComputationTransformation.scala ||
-  
-          
+         
           $f -ef ./computationSemantics/src/main/scala/pdbp/computation/meaning/IdentityComputationMeaning.scala ||
-          $f -ef ./computationSemantics/src/main/scala/pdbp/computation/meaning/of/free/tailrecFolding/ComputationMeaningTransformation.scala ]]
+          $f -ef ./computationSemantics/src/main/scala/pdbp/computation/meaning/of/free/tailrecFolding/ComputationMeaningTransformation.scala ||
+  
+          $f -ef ./programSyntaxInstances/src/main/scala/pdbp/program/instances/active/writing/WritingProgram.scala ||
+          $f -ef ./programSyntaxInstances/src/main/scala/pdbp/program/instances/active/writing/reading/ReadingWritingProgram.scala ]]
 
   then
     echo "scalafmt $f has problems with 'private[pdbp] trait '"
     sed -i "s/private\[pdbp\] trait /private\[pdbp\] class /g" $f
     scalafmt $f
     sed -i "s/private\[pdbp\] class /private\[pdbp\] trait /g" $f  
+
+###############################################################################################################################################################
 
   elif [[ $f -ef ./types/src/main/scala/pdbp/types/kleisli/binary/kleisliBinaryTypeConstructorType.scala ||
           $f -ef ./types/src/main/scala/pdbp/types/kleisli/unary/kleisliUnaryTypeConstructorType.scala ]]
@@ -120,6 +141,8 @@ then
     sed -i "s/private\[pdbp\] type /\/\/private\[pdbp\] type /g" $f
     scalafmt $f
     sed -i "s/\/\/private\[pdbp\] type /private\[pdbp\] type /g" $f          
+
+###############################################################################################################################################################
 
   elif [[ $f -ef ./programSemantics/src/main/scala/pdbp/program/meaning/ProgramMeaning.scala ||
 
@@ -135,6 +158,8 @@ then
     sed -i "s/\/\/private\[pdbp\] lazy /private\[pdbp\] lazy /g" $f
     sed -i "s/private\[pdbp\] class /private\[pdbp\] trait /g" $f    
 
+###############################################################################################################################################################
+
   elif [[ $f -ef ./computationSemantics/src/main/scala/pdbp/computation/meaning/transformation/ImplicitComputationMeaningTransformation.scala ]]
 
   then
@@ -145,6 +170,8 @@ then
     scalafmt $f
     sed -i "s/\/\/private\[pdbp\] implicit /private\[pdbp\] implicit /g" $f
     sed -i "s/private\[pdbp\] class /private\[pdbp\] trait /g" $f 
+
+###############################################################################################################################################################
 
   elif [[ $f -ef ./computationTransformations/src/main/scala/pdbp/computation/transformation/free/FreeTransformation.scala ||
           $f -ef ./computationTransformations/src/main/scala/pdbp/computation/transformation/reading/ReadingTransformation.scala ||
@@ -162,14 +189,19 @@ then
     sed -i "s/\/\/private\[pdbp\] type /private\[pdbp\] type /g" $f 
     sed -i "s/private\[pdbp\] class /private\[pdbp\] trait /g" $f    
 
+###############################################################################################################################################################
+
   elif [[ $f -ef ./computationTransformations/src/main/scala/pdbp/computation/transformation/reading/ComputationReadingTransformation.scala ||
           $f -ef ./computationTransformations/src/main/scala/pdbp/computation/transformation/writing/ComputationWritingTransformation.scala ||
           $f -ef ./computationTransformations/src/main/scala/pdbp/computation/transformation/state/ComputationStateTransformation.scala ||
           $f -ef ./computationTransformations/src/main/scala/pdbp/computation/transformation/trying/ComputationFailureTransformation.scala ||
-          $f -ef ./computationTransformations/src/main/scala/pdbp/computation/transformation/delimiting/ControlTransformation.scala ]]
+          $f -ef ./computationTransformations/src/main/scala/pdbp/computation/transformation/delimiting/ControlTransformation.scala ||
+          $f -ef ./computationTransformations/src/main/scala/pdbp/computation/transformation/writing/reading/ReadingWritingTransformation.scala ]]
   
   then
     echo "WARNING: $f not formatted"
+
+###############################################################################################################################################################
 
   else
     echo "ERROR: $f not formatted"

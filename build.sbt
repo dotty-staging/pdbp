@@ -79,12 +79,19 @@ lazy val mainProgramUtils = project
     name := "mainProgramUtils"
   ).dependsOn(types, utils, programSyntax)     
 
+lazy val liftingSyntaxInstances = project
+  .in(file("liftingSyntaxInstances"))
+  .settings(
+    commonSettings,
+    name := "liftingSyntaxInstances"
+  ).dependsOn(types, liftingSyntax)
+
 lazy val programSyntaxInstances = project
   .in(file("programSyntaxInstances"))
   .settings(
     commonSettings,
     name := "programSyntaxInstances"
-  ).dependsOn(types, programSyntax, computationSyntax, computationTransformations) 
+  ).dependsOn(types, programSyntax, computationSyntax, computationTransformations, liftingSyntaxInstances) 
 
 lazy val programSemanticsInstances = project
   .in(file("programSemanticsInstances"))

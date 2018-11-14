@@ -1,4 +1,4 @@
-package pdbp.writable
+package pdbp.writable.instances.toConsoleWriting.types
 
 //       _______         __    __        _______
 //      / ___  /\       / /\  / /\      / ___  /\
@@ -11,8 +11,4 @@ package pdbp.writable
 //  Program Description Based Programming Library
 //  author        Luc Duponcheel        2017-2018
 
-import pdbp.types.const.constType._
-
-import pdbp.computation.Lifting
-
-trait Writable[W] extends Startable[W] with Appendable[W] with Lifting[Const[W]]
+case class ToConsoleWriting(effect: Unit => Unit)

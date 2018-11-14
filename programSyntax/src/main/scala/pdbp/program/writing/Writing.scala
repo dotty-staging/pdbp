@@ -30,9 +30,9 @@ trait Writing[W: Writable, >-->[- _, + _]] {
   def write[Z]: (Z => W) `I=>` Z >--> Unit =
     seqCompose(function(implicitly), Thunk(`w>-->u`))
 
-  def writing[Z, Y, X](
-      `(z&&y)=>x`: (Z && Y) => X): (Z >--> Y) => ((X => W) `I=>` Z >--> Y) = {
-    `z>-->y` =>
+  def writing[Z, Y, X]
+    : ((Z && Y) => X) => (Z >--> Y) => ((X => W) `I=>` Z >--> Y) = {
+    `(z&&y)=>x` => `z>-->y` =>
       val `(z&&y)>-->x` = function(`(z&&y)=>x`)
       val `z>-->(x&&y)` =
         `let` {

@@ -58,7 +58,7 @@ private[pdbp] trait ReadingTransformation[R, C[+ _]: Computation]
   }
 
   override private[pdbp] val `u>-->r`: Unit `=>RTC` R = { _ =>
-    resultC(implicitly)
+    resultC(implicitly[R])
   }
 
 }

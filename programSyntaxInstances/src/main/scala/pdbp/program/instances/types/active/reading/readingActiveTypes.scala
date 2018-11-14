@@ -1,4 +1,4 @@
-package pdbp.writable
+package pdbp.program.instances.types.active.reading
 
 //       _______         __    __        _______
 //      / ___  /\       / /\  / /\      / ___  /\
@@ -11,8 +11,16 @@ package pdbp.writable
 //  Program Description Based Programming Library
 //  author        Luc Duponcheel        2017-2018
 
-import pdbp.types.const.constType._
+import pdbp.types.kleisli.binary.kleisliBinaryTypeConstructorType._
 
-import pdbp.computation.Lifting
+import pdbp.computation.transformation.reading.ReadingTransformation._
 
-trait Writable[W] extends Startable[W] with Appendable[W] with Lifting[Const[W]]
+import pdbp.program.instances.types.active.activeTypes._
+
+object readingActiveTypes {
+
+  type ReadingActive[R] = ReadingTransformed[R, Active]
+
+  type `=>RA`[R] = Kleisli[ReadingActive[R]]
+
+}
