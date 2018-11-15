@@ -8,10 +8,10 @@
 /programSyntax/target/
 /computationSyntax/target/
 /computationTransformations/target/
+/liftingSyntaxInstances/target/
 /programSemantics/target/
 /computationSemantics/target/
 /mainProgramUtils/target/
-/liftingSyntaxInstances/target/
 /programSyntaxInstances/target/
 /programSemanticsInstances/target/
 /programRunners/target/

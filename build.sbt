@@ -65,26 +65,27 @@ lazy val computationTransformations = project
     name := "programSemantics"
   ).dependsOn(naturalTransformation, programSyntax)    
 
- lazy val computationSemantics = project
-  .in(file("computationSemantics"))
-  .settings(
-    commonSettings,
-    name := "computationSemantics"
-  ).dependsOn(types, naturalTransformation, programSyntax, computationSyntax, computationTransformations, programSemantics) 
-
-lazy val mainProgramUtils = project
-  .in(file("mainProgramUtils"))
-  .settings(
-    commonSettings,
-    name := "mainProgramUtils"
-  ).dependsOn(types, utils, programSyntax)     
-
+// actually only liftingSyntaxInstances via writing instances 
 lazy val liftingSyntaxInstances = project
   .in(file("liftingSyntaxInstances"))
   .settings(
     commonSettings,
     name := "liftingSyntaxInstances"
   ).dependsOn(types, liftingSyntax)
+
+ lazy val computationSemantics = project
+  .in(file("computationSemantics"))
+  .settings(
+    commonSettings,
+    name := "computationSemantics"
+  ).dependsOn(types, naturalTransformation, programSyntax, computationSyntax, computationTransformations, programSemantics, liftingSyntaxInstances) 
+
+lazy val mainProgramUtils = project
+  .in(file("mainProgramUtils"))
+  .settings(
+    commonSettings,
+    name := "mainProgramUtils"
+  ).dependsOn(types, utils, programSyntax)
 
 lazy val programSyntaxInstances = project
   .in(file("programSyntaxInstances"))
@@ -105,7 +106,7 @@ lazy val programRunners = project
   .settings(
     commonSettings,
     name := "programRunners"
-  ) 
+  ).dependsOn(types) 
 
 lazy val programExampleUtils = project
   .in(file("programExampleUtils"))
@@ -126,7 +127,7 @@ lazy val mainExampleUtils = project
   .settings(
     commonSettings,
     name := "mainExampleUtils"
-  ).dependsOn(programSyntax, mainProgramUtils)
+  ).dependsOn(programSyntax, liftingSyntaxInstances, mainProgramUtils)
 
 lazy val mainExamples = project
   .in(file("mainExamples"))

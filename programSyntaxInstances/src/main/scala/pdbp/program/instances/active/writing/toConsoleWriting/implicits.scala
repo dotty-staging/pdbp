@@ -12,7 +12,6 @@ package pdbp.program.instances.active.writing.toConsoleWriting
 //  author        Luc Duponcheel        2017-2018
 
 import pdbp.program.Program
-
 import pdbp.program.writing.Writing
 
 import pdbp.computation.Computation

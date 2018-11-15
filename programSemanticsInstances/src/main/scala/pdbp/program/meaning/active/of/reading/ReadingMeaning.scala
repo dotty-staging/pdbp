@@ -1,4 +1,4 @@
-package pdbp.program.instances.active.reading
+package pdbp.program.meaning.active.of.reading
 
 //       _______         __    __        _______
 //      / ___  /\       / /\  / /\      / ___  /\
@@ -11,20 +11,20 @@ package pdbp.program.instances.active.reading
 //  Program Description Based Programming Library
 //  author        Luc Duponcheel        2017-2018
 
-import pdbp.program.Program
-import pdbp.program.reading.Reading
-
-import pdbp.computation.Computation
-
-import pdbp.computation.transformation.ComputationTransformation
-import pdbp.computation.transformation.reading.ReadingTransformation
+import pdbp.computation.meaning.ComputationMeaning
+import pdbp.computation.meaning.of.reading.reading.ComputationMeaningTransformation
 
 import pdbp.program.instances.types.active.activeTypes._
 import pdbp.program.instances.types.active.reading.readingActiveTypes._
 
-private[pdbp] trait ReadingProgram[R]
-    extends Computation[ReadingActive[R]]
-    with Program[`=>RA`[R]]
-    with Reading[R, `=>RA`[R]]
-    with ComputationTransformation[Active, ReadingActive[R]]
-    with ReadingTransformation[R, Active]
+import pdbp.program.meaning.active.of.active.implicits.identity
+
+trait ReadingMeaning[R]
+    extends ComputationMeaningTransformation[R, Active, Active]
+    with ComputationMeaning[ReadingActive[R], ReadingActive[R]] {
+
+  override private[pdbp] implicit val implicitComputationMeaning
+    : ComputationMeaning[Active, Active] =
+    identity
+
+}
