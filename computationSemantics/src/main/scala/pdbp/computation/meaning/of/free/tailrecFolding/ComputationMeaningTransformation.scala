@@ -64,10 +64,10 @@ private[pdbp] trait ComputationMeaningTransformation[
               `c~u~>m`(cz)
             case Result(z) =>
               resultM(z)
-            case Bind(Transform(cy), y2ftcz) =>
-              bindM(`c~u~>m`(cy), Thunk({ y =>
-                apply(y2ftcz.eval(y))
-              }))
+            // case Bind(Transform(cy), y2ftcz) =>
+            //   bindM(`c~u~>m`(cy), Thunk({ y =>
+            //     apply(y2ftcz.eval(y))
+            //   }))
             case Bind(Result(y), y2ftcz) =>
               apply(y2ftcz.eval(y))
             case Bind(Bind(ftcx, x2ftcy), y2ftcz) =>
