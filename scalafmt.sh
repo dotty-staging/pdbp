@@ -193,10 +193,10 @@ do
 
   elif [[ $f -ef ./computationTransformations/src/main/scala/pdbp/computation/transformation/reading/ComputationReadingTransformation.scala ||
           $f -ef ./computationTransformations/src/main/scala/pdbp/computation/transformation/writing/ComputationWritingTransformation.scala ||
+          $f -ef ./computationTransformations/src/main/scala/pdbp/computation/transformation/writing/reading/ReadingWritingTransformation.scala ||
           $f -ef ./computationTransformations/src/main/scala/pdbp/computation/transformation/state/ComputationStateTransformation.scala ||
           $f -ef ./computationTransformations/src/main/scala/pdbp/computation/transformation/trying/ComputationFailureTransformation.scala ||
-          $f -ef ./computationTransformations/src/main/scala/pdbp/computation/transformation/delimiting/ControlTransformation.scala ||
-          $f -ef ./computationTransformations/src/main/scala/pdbp/computation/transformation/writing/reading/ReadingWritingTransformation.scala ]]
+          $f -ef ./computationTransformations/src/main/scala/pdbp/computation/transformation/delimiting/ControlTransformation.scala ]]
   
   then
     echo "WARNING: $f not formatted"

@@ -26,8 +26,10 @@ private[pdbp] object bindingOperator {
 
   implicit class bindingOperator[C[+ _]: Binding, -Z, ZZ <: Z](czz: C[ZZ]) {
 
+    private val implicitBinding = implicitly[Binding[C]]
+
     private[pdbp] def bind[Y](`zz=>cy`: ZZ => C[Y]): C[Y] =
-      implicitly.bind(czz, Thunk(`zz=>cy`))
+      implicitBinding.bind(czz, Thunk(`zz=>cy`))
   }
 
 }

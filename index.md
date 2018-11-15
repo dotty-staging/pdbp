@@ -2025,8 +2025,10 @@ private[pdbp] object bindingOperator {
 
   implicit class bindingOperator[C[+ _]: Binding, -Z, ZZ <: Z](czz: C[ZZ]) {
 
+    private val implicitBinding = implicitly[Binding[C]]
+
     private[pdbp] def bind[Y](`zz=>cy`: ZZ => C[Y]): C[Y] =
-      implicitly.bind(czz, Thunk(`zz=>cy`))
+      implicitBinding.bind(czz, Thunk(`zz=>cy`))
   }
 
 }
@@ -2845,7 +2847,9 @@ import pdbp.utils.effectfulFunctionUtils._
 
 class EffectfulUtils[>-->[- _, + _]: Program] {
 
-  import implicitly._
+  private val implicitProgram = implicitly[Program[>-->]]
+
+  import implicitProgram._
 
   def effectfulReadBigIntFromConsoleWithMessage(
       message: String): Unit >--> BigInt =
@@ -3423,8 +3427,6 @@ They construct a data structure on the heap.
 
 Think of `Free[C, Z]` as a free data type wrapped around `C` as described in [Data types a la carte](http://www.cs.ru.nl/~W.Swierstra/Publications/DataTypesALaCarte.pdf).
 
-
-
 The data structure `Free[C, Z]` is used to define, using `Result` and `Bind`, the computational capabilities of `trait Computation[FreeTransformed[C]]`.
 Note that `result` and `bind` do not use the computational capabilities of `C` at all
 
@@ -3982,7 +3984,7 @@ private[pdbp] trait ReadingTransformation[R, C[+ _]: Computation]
 The types `RTC` and `` `=>RTC` ``, defined using `` `I=>` ``, indicate that the an implicitly available global value `implicitly[R]` is available. 
 In fact, in `` `u>-->r` `` we use it as `implicitly[R]` (we can also use it as the abbreviation `implicitly`).
 
-Note that `implicitly[R]` does not to be confused with `implicitly[Computation[C]]`. 
+Note that there are two implicit evidences involved:`implicitly[R]` and `implicitly[Computation[C]]`. 
 
 You may wonder how on earth it is possible that the definitions above are so simple. 
 The magic of implicit function types is that the compiler can turn value types into implicit function types whenever it expects them to be, based upon available type information.
@@ -4072,6 +4074,132 @@ private[pdbp] trait WritingTransformation[W: Writable, C[+ _]: Computation]
 ```
 
 Note that `transform` resp. `bind` make use of `start` resp. `append`.
+
+Note that, again, there are two implicit evidences involved: `implicitly[Writable[W]]` and `implicitly[Computation[C]]`.
+
+This is a recurring theme.
+We avoid using the abbreviation `implicitly` (also when using it does not lead to ambiguity) and work with `private val`'s instead.
+ 
+## **`ComputationReadingTransformation` and `ComputationWritingTransformation`**
+
+When using computation transformers to enhance computations (and corresponding kleisli programs) with new computational capabilities (and corresponding programming capabilities) we need to take care that the already existing computational capabilities (and corresponding programming capabilities) are transformed to computational capabilities (and corresponding programming capabilities) of the transformed computations (and corresponding kleisli programs).
+
+For some programming capabilities this can be done in a way that only depends on `transform`.
+Reading, using `` `u>-->r` ``, and writing, using `` `w>-->u` ``, are two of them, as shown below.
+
+```scala
+package pdbp.computation.transformation.reading
+
+import pdbp.types.kleisli.binary.kleisliBinaryTypeConstructorType._
+
+import pdbp.program.reading.Reading
+
+import pdbp.computation.Computation
+
+import pdbp.computation.transformation.ComputationTransformation
+
+private[pdbp] trait ComputationReadingTransformation[
+    R, 
+    C[+ _]: Computation
+          : [C[+ _]] => Reading[R, Kleisli[C]],
+    T[+ _]]
+    extends ComputationTransformation[C, T]
+    with Reading[R, Kleisli[T]] {
+
+  private val implicitReading: Reading[R, Kleisli[C]] =
+    implicitly[Reading[R, Kleisli[C]]]
+
+  private type `=>T` = Kleisli[T]
+
+  override private[pdbp] val `u>-->r`: Unit `=>T` R = 
+    transform(implicitReading.`u>-->r`)
+
+}
+```
+
+and
+
+```scala
+package pdbp.computation.transformation.writing
+
+import pdbp.types.kleisli.binary.kleisliBinaryTypeConstructorType._
+
+import pdbp.program.writing.Writing
+
+import pdbp.computation.Computation
+
+import pdbp.computation.transformation.ComputationTransformation
+
+private[pdbp] trait ComputationWritingTransformation[
+    W, 
+    C[+ _]: Computation
+          : [C[+ _]] => Writing[W, Kleisli[C]],
+    T[+ _]]
+    extends ComputationTransformation[C, T]
+    with Writing[W, Kleisli[T]] {
+
+  private val implicitWriting: Writing[W, Kleisli[C]] =
+    implicitly[Writing[W, Kleisli[C]]]
+
+  private type `=>T` = Kleisli[T]
+
+  override private[pdbp] val `w>-->u`: W `=>T` Unit = 
+    transform(implicitWriting.`w>-->u`)
+
+}
+```
+
+## **`ReadingWritingTransformation`**
+
+Computation transformations can be composed to enhance computations with the new programming capabilities of both of them.
+
+Consider
+
+```scala
+package pdbp.computation.transformation.writing.reading
+
+import pdbp.types.implicitFunctionType._
+import pdbp.types.kleisli.binary.kleisliBinaryTypeConstructorType._
+
+import pdbp.writable.Writable
+
+import pdbp.program.writing.Writing
+
+import pdbp.computation.Computation
+
+import pdbp.computation.transformation.reading.ReadingTransformation
+import pdbp.computation.transformation.reading.ReadingTransformation._
+
+import pdbp.computation.transformation.writing.ComputationWritingTransformation
+
+private[pdbp] trait ReadingWritingTransformation[
+    R, 
+    W: Writable, 
+    C[+ _]: Computation
+          : [C[+ _]] => Writing[W, Kleisli[C]]]
+    extends ReadingTransformation[R, C]
+    with ComputationWritingTransformation[W, C, ReadingTransformed[R, C]]
+```
+
+For `trait ReadingWritingTransformation` we do not have to write any code since `trait ComputationWritingTransformation` does all the heavy lifting.
+
+You may ask yourself why we go for `ReadingWritingTransformation` while we could go for `WritingReadingTransformation` instead.
+
+It is a choice.
+
+Note that computation transformation composition is not commutative.
+You can argue that it a disadvantage that you do not have the liberty to compose computation transformations in any possible order you want.
+You can argue that [every disadvantage has it's advantage](https://en.wikiquote.org/wiki/Johan_Cruyff) because [Constraints Liberate, Liberties Constrain](https://www.youtube.com/watch?v=GqmsQeSzMdw).
+
+Up to you to decide.
+
+
+
+
+
+
+
+
 
 
 
