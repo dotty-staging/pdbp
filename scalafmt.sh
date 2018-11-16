@@ -5,7 +5,7 @@ do
 
 ###############################################################################################################################################################
 
-  if [[ $f -ef ./programSyntaxInstances/src/main/scala/pdbp/program/instances/active/writing/toConsoleWriting/reading/bigint/free/implicits.scala ]]
+  if [[ $f -ef ./mainExamples/src/main/scala/examples/main/active/writing/toConsoleWriting/reading/bigint/tailrecursive/FactorialMain.scala ]]
   # if [[ true ]]
 
   then
@@ -95,7 +95,8 @@ do
         $f -ef ./mainExamples/src/main/scala/examples/main/active/effectfulReadingAndWriting/FactorialMain.scala ||       
         $f -ef ./mainExamples/src/main/scala/examples/main/active/effectfulReadingAndWriting/SimpleFactorialMain.scala ||
         $f -ef ./mainExamples/src/main/scala/examples/main/active/tailrecursive/effectfulReadingAndWriting/FactorialMain.scala ||
-        $f -ef ./mainExamples/src/main/scala/examples/main/active/writing/toConsoleWriting/reading/bigint/FactorialMain.scala ]]       
+        $f -ef ./mainExamples/src/main/scala/examples/main/active/writing/toConsoleWriting/reading/bigint/FactorialMain.scala ||
+        $f -ef ./mainExamples/src/main/scala/examples/main/active/writing/toConsoleWriting/reading/bigint/tailrecursive/FactorialMain.scala ]]       
   
   then
     echo "scalafmt $f"
