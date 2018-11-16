@@ -5,7 +5,7 @@ do
 
 ###############################################################################################################################################################
 
-  if [[ $f -ef ./programRunners/src/main/scala/pdbp/program/runners/active/reading/runner.scala ]]
+  if [[ $f -ef ./programSyntaxInstances/src/main/scala/pdbp/program/instances/active/writing/toConsoleWriting/reading/bigint/free/implicits.scala ]]
   # if [[ true ]]
 
   then
@@ -67,12 +67,14 @@ do
         $f -ef ./programSyntaxInstances/src/main/scala/pdbp/program/instances/types/active/reading/readingActiveTypes.scala ||
         $f -ef ./programSyntaxInstances/src/main/scala/pdbp/program/instances/types/active/writing/writingActiveTypes.scala ||
         $f -ef ./programSyntaxInstances/src/main/scala/pdbp/program/instances/types/active/writing/reading/readingWritingActiveTypes.scala ||
+        $f -ef ./programSyntaxInstances/src/main/scala/pdbp/program/instances/types/active/writing/reading/free/freeReadingWritingActiveTypes.scala ||
         $f -ef ./programSyntaxInstances/src/main/scala/pdbp/program/instances/active/reading/ReadingProgram.scala ||
         $f -ef ./programSyntaxInstances/src/main/scala/pdbp/program/instances/active/implicits.scala ||
         $f -ef ./programSyntaxInstances/src/main/scala/pdbp/program/instances/active/free/implicits.scala ||
         $f -ef ./programSyntaxInstances/src/main/scala/pdbp/program/instances/active/reading/bigint/implicits.scala ||
         $f -ef ./programSyntaxInstances/src/main/scala/pdbp/program/instances/active/writing/toConsoleWriting/implicits.scala ||
         $f -ef ./programSyntaxInstances/src/main/scala/pdbp/program/instances/active/writing/toConsoleWriting/reading/bigint/implicits.scala ||
+        $f -ef ./programSyntaxInstances/src/main/scala/pdbp/program/instances/active/writing/toConsoleWriting/reading/bigint/free/implicits.scala ||
 
         $f -ef ./programSemanticsInstances/src/main/scala/pdbp/program/meaning/active/of/reading/ReadingMeaning.scala ||
         $f -ef ./programSemanticsInstances/src/main/scala/pdbp/program/meaning/active/of/active/implicits.scala ||
@@ -137,7 +139,8 @@ do
           $f -ef ./computationSemantics/src/main/scala/pdbp/computation/meaning/of/writing/toConsoleWriting/effectExecuting/ComputationMeaningTransformation.scala ||
   
           $f -ef ./programSyntaxInstances/src/main/scala/pdbp/program/instances/active/writing/WritingProgram.scala ||
-          $f -ef ./programSyntaxInstances/src/main/scala/pdbp/program/instances/active/writing/reading/ReadingWritingProgram.scala ]]
+          $f -ef ./programSyntaxInstances/src/main/scala/pdbp/program/instances/active/writing/reading/ReadingWritingProgram.scala ||
+          $f -ef ./programSyntaxInstances/src/main/scala/pdbp/program/instances/active/writing/reading/free/FreeReadingWritingProgram.scala ]]
 
   then
     echo "scalafmt $f has problems with 'private[pdbp] trait '"
@@ -210,7 +213,8 @@ do
           $f -ef ./computationTransformations/src/main/scala/pdbp/computation/transformation/writing/reading/ReadingWritingTransformation.scala ||
           $f -ef ./computationTransformations/src/main/scala/pdbp/computation/transformation/state/ComputationStateTransformation.scala ||
           $f -ef ./computationTransformations/src/main/scala/pdbp/computation/transformation/trying/ComputationFailureTransformation.scala ||
-          $f -ef ./computationTransformations/src/main/scala/pdbp/computation/transformation/delimiting/ControlTransformation.scala ]]
+          $f -ef ./computationTransformations/src/main/scala/pdbp/computation/transformation/delimiting/ControlTransformation.scala ||
+          $f -ef ./computationTransformations/src/main/scala/pdbp/computation/transformation/writing/reading/free/FreeReadingWritingTransformation.scala ]]
   
   then
     echo "WARNING: $f not formatted"
