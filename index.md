@@ -3542,16 +3542,15 @@ private[pdbp] trait ComputationMeaningTransformation[
 
       override private[pdbp] lazy val unaryTransformation: FTC `~U~>` M =
         new {
-          @annotation.tailrec
           override private[pdbp] def apply[Z](ftcz: FTC[Z]): M[Z] = ftcz match {
             case Transform(cz) =>
               `c~u~>m`(cz)
             case Result(z) =>
               resultM(z)
-            // case Bind(Transform(cy), y2ftcz) =>
-            //   bindM(`c~u~>m`(cy), Thunk({ y =>
-            //     apply(y2ftcz.eval(y))
-            //   }))
+            case Bind(Transform(cy), y2ftcz) =>
+              bindM(`c~u~>m`(cy), Thunk({ y =>
+                apply(y2ftcz.eval(y))
+              }))
             case Bind(Result(y), y2ftcz) =>
               apply(y2ftcz.eval(y))
             case Bind(Bind(ftcx, x2ftcy), y2ftcz) =>
@@ -3581,6 +3580,10 @@ The method `apply` that defines `unaryTransformation` of `tailrecFoldingComputat
 
 Note that the last `case` for `Bind` uses an associativity law of `bind`.
 The left associated `Bind`'s are folded to right associated `Bind`'s. 
+
+Note that we do not annotate `apply` with `@annotation.tailrec`. 
+The compiler would complain because the call to `apply` in the second `case` is not in tail position.
+Luckily, the compiler optimizes all other calls because they are all in tail position.
 
 ## **`active.of.free.tailrecFolding`**
 
@@ -4509,7 +4512,7 @@ object implicits {
 }
 ```
 
-## **`meaning.of.reading.reading.ComputationMeaningTransformation`**
+## **`meaning.of.reading.readingImplicit.ComputationMeaningTransformation`**
 
 Consider the implicit value reading computation meaning transformation below
 
@@ -4671,7 +4674,7 @@ import pdbp.program.meaning.ProgramMeaning
 
 import pdbp.computation.meaning.ComputationMeaning
 import pdbp.computation.meaning.transformation.ImplicitComputationMeaningTransformation
-import pdbp.computation.meaning.of.reading.reading.ComputationMeaningTransformation
+import pdbp.computation.meaning.of.reading.readingImplicit.ComputationMeaningTransformation
 
 import  pdbp.program.instances.types.active.activeTypes._
 import  pdbp.program.instances.types.active.reading.readingActiveTypes._
@@ -4703,7 +4706,7 @@ where
 package pdbp.program.meaning.active.of.reading
 
 import pdbp.computation.meaning.ComputationMeaning
-import pdbp.computation.meaning.of.reading.reading.ComputationMeaningTransformation
+import pdbp.computation.meaning.of.reading.readingImplicit.ComputationMeaningTransformation
 
 import pdbp.program.instances.types.active.activeTypes._
 import pdbp.program.instances.types.active.reading.readingActiveTypes._
@@ -4783,7 +4786,7 @@ import pdbp.computation.meaning.ComputationMeaning
 
 import pdbp.computation.meaning.transformation.ImplicitComputationMeaningTransformation
 
-import pdbp.computation.meaning.of.reading.reading.ComputationMeaningTransformation
+import pdbp.computation.meaning.of.reading.readingImplicit.ComputationMeaningTransformation
 
 import pdbp.program.instances.types.active.activeTypes._
 import pdbp.program.instances.types.active.reading.readingActiveTypes._
@@ -4830,17 +4833,6 @@ Consider
 
 ```scala
 package examples.main.active.writing.toConsoleWriting.reading.bigint
-
-//       _______         __    __        _______
-//      / ___  /\       / /\  / /\      / ___  /\
-//     / /__/ / / _____/ / / / /_/__   / /__/ / /
-//    / _____/ / / ___  / / / ___  /\ /____  / /
-//   / /\____\/ / /__/ / / / /__/ / / \___/ / /
-//  /_/ /      /______/ / /______/ /     /_/ /
-//  \_\/       \______\/  \______\/      \_\/
-//                                           v1.0
-//  Program Description Based Programming Library
-//  author        Luc Duponcheel        2017-2018
 
 import pdbp.writable.instances.toConsoleWriting.types.ToConsoleWriting
 
@@ -4920,9 +4912,9 @@ and
 ```scala
 package pdbp.writable.instances.toConsoleWriting.utils
 
-import pdbp.writable.instances.toConsoleWriting.types.ToConsoleWriting
-
 import pdbp.utils.effectfulFunctionUtils._
+
+import pdbp.writable.instances.toConsoleWriting.types.ToConsoleWriting
 
 object toConsoleWritingUtils {
 
@@ -5006,6 +4998,246 @@ please type an integer to read
 10
 the factorial value of the integer read is
 3628800
+```
+
+## **Combining tail recursion with reading and writing**
+
+We have dealt two problems separately
+
+ - stack overflow
+   - using `FreeTransformation` and `tailrecFolding.ComputationMeaningTransformation`
+ - effectful reading
+   - using `ReadingTransformation` and `readingImplicit.ComputationMeaningTransformation`
+ - effectful writing
+   - using `WritingTransformation` and `toConsoleWriting.effectExecuting.ComputationMeaningTransformation`
+
+We combined the latter two techniques to deal with effectful I/0.
+
+note that we dealt with reading in a generic way and with writing in a specific way.
+
+What about combining the three techniques?
+
+Consider
+
+```scala
+package pdbp.computation.transformation.writing.reading.free
+
+import pdbp.types.kleisli.binary.kleisliBinaryTypeConstructorType._
+
+import pdbp.writable.Writable
+
+import pdbp.program.reading.Reading
+import pdbp.program.writing.Writing
+
+import pdbp.computation.Computation
+
+import pdbp.computation.transformation.free.FreeTransformation
+import pdbp.computation.transformation.free.FreeTransformation._
+import pdbp.computation.transformation.reading.ComputationReadingTransformation
+import pdbp.computation.transformation.writing.ComputationWritingTransformation
+
+private[pdbp] trait FreeReadingWritingTransformation[
+    R, W: Writable, 
+    C[+ _]: Computation
+          : [C[+ _]] => Reading[R, Kleisli[C]]
+          : [C[+ _]] => Writing[W, Kleisli[C]]]
+    extends FreeTransformation[C]
+    with ComputationReadingTransformation[R, C, FreeTransformed[C]]
+    with ComputationWritingTransformation[W, C, FreeTransformed[C]]
+```
+
+
+For `trait FreeReadingWritingTransformation` we do not have to write any code since `trait ComputationReadingTransformation`and `trait ComputationWritingTransformation` do all the heavy lifting.
+
+At the syntactic level we can now define
+
+```scala
+package pdbp.program.instances.types.active.writing.reading.free
+
+import pdbp.types.kleisli.binary.kleisliBinaryTypeConstructorType._
+
+import pdbp.computation.transformation.free.FreeTransformation._
+
+import pdbp.program.instances.types.active.writing.reading.readingWritingActiveTypes._
+
+object freeReadingWritingActiveTypes {
+
+  type FreeReadingWritingActive[R, W] =
+    FreeTransformed[ReadingWritingActive[R, W]]
+
+  type `=>FRWA`[R, W] = Kleisli[FreeReadingWritingActive[R, W]]
+
+}
+```
+
+and
+
+
+```scala
+package pdbp.program.instances.active.writing.toConsoleWriting.reading.bigint.free
+
+import pdbp.program.Program
+import pdbp.program.reading.Reading
+import pdbp.program.writing.Writing
+
+import pdbp.computation.Computation
+
+import pdbp.computation.transformation.ComputationTransformation
+import pdbp.computation.transformation.free.FreeTransformation
+import pdbp.computation.transformation.writing.reading.free.FreeReadingWritingTransformation
+import pdbp.computation.transformation.reading.ComputationReadingTransformation
+import pdbp.computation.transformation.writing.ComputationWritingTransformation
+
+import pdbp.writable.instances.toConsoleWriting.types.ToConsoleWriting
+import pdbp.writable.instances.toConsoleWriting.implicits.toConsoleWritingWritable
+
+import pdbp.program.instances.types.active.writing.reading.readingWritingActiveTypes._
+import pdbp.program.instances.types.active.writing.reading.free.freeReadingWritingActiveTypes._
+
+import pdbp.program.instances.active.writing.reading.free.FreeReadingWritingProgram
+import pdbp.program.instances.active.writing.toConsoleWriting.reading.bigint.implicits.readingWritingProgram
+
+object implicits {
+
+  implicit object freeReadingWritingProgram
+      extends FreeReadingWritingProgram[BigInt, ToConsoleWriting]()
+      with Computation[FreeReadingWritingActive[BigInt, ToConsoleWriting]]()
+      with Program[`=>FRWA`[BigInt, ToConsoleWriting]]()
+      with Reading[BigInt, `=>FRWA`[BigInt, ToConsoleWriting]]()
+      with Writing[ToConsoleWriting, `=>FRWA`[BigInt, ToConsoleWriting]]()
+      with ComputationTransformation[
+        ReadingWritingActive[BigInt, ToConsoleWriting],
+        FreeReadingWritingActive[BigInt, ToConsoleWriting]]()
+      with FreeTransformation[ReadingWritingActive[BigInt, ToConsoleWriting]]()
+      with ComputationReadingTransformation[
+        BigInt,
+        ReadingWritingActive[BigInt, ToConsoleWriting],
+        FreeReadingWritingActive[BigInt, ToConsoleWriting]
+      ]()
+      with ComputationWritingTransformation[
+        ToConsoleWriting,
+        ReadingWritingActive[BigInt, ToConsoleWriting],
+        FreeReadingWritingActive[BigInt, ToConsoleWriting]
+      ]()
+      with FreeReadingWritingTransformation[
+        BigInt,
+        ToConsoleWriting,
+        ReadingWritingActive[BigInt, ToConsoleWriting]]()
+
+}
+```
+
+At the semantic level we can now define
+
+```scala
+package pdbp.program.meaning.active.of.writing.toConsoleWriting.reading.bigint.free
+
+import pdbp.writable.instances.toConsoleWriting.types.ToConsoleWriting
+
+import pdbp.program.meaning.ProgramMeaning
+
+import pdbp.computation.meaning.ComputationMeaning
+
+import pdbp.computation.meaning.transformation.ImplicitComputationMeaningTransformation
+
+import pdbp.computation.meaning.of.free.tailrecFolding.ComputationMeaningTransformation
+
+import pdbp.program.instances.types.active.reading.readingActiveTypes._
+import pdbp.program.instances.types.active.writing.reading.readingWritingActiveTypes._
+import pdbp.program.instances.types.active.writing.reading.free.freeReadingWritingActiveTypes._
+
+import pdbp.program.instances.active.reading.bigint.implicits.readingProgram
+import pdbp.program.instances.active.writing.toConsoleWriting.reading.bigint.implicits.readingWritingProgram
+import pdbp.program.instances.active.writing.toConsoleWriting.reading.bigint.free.implicits.freeReadingWritingProgram
+
+import pdbp.program.meaning.active.of.writing.toConsoleWriting.reading.bigint.implicits.readingEffectExecuting
+
+object implicits {
+
+  implicit object tailrecFoldingReadingEffectExecuting
+      extends ComputationMeaningTransformation[
+        ReadingWritingActive[BigInt, ToConsoleWriting],
+        ReadingActive[BigInt]]()
+      with ImplicitComputationMeaningTransformation[
+        ReadingWritingActive[BigInt, ToConsoleWriting],
+        ReadingActive[BigInt],
+        FreeReadingWritingActive[BigInt, ToConsoleWriting],
+        ReadingActive[BigInt]]()
+      with ComputationMeaning[FreeReadingWritingActive[BigInt, ToConsoleWriting],
+                              ReadingActive[BigInt]]()
+      with ProgramMeaning[`=>FRWA`[BigInt, ToConsoleWriting], `=>RA`[BigInt]]() {
+
+    override private[pdbp] implicit val implicitComputationMeaning =
+      readingEffectExecuting
+
+  }
+
+}
+```
+
+## **Running `mainFactorial` using `active.writing.toConsoleWriting.reading.bigint.free.implicits.freeReadingWritingProgram`, `active.of.writing.toConsoleWriting.reading.bigint.free.implicits.tailrecFoldingReadingEffectExecuting.meaning`, and `active.reading.runner.run`, and using `readingWritingProgram.read` and `readingWritingProgram.write`**
+
+Consider
+
+```scala
+package examples.main.active.writing.toConsole.reading.bigint.tailrecursive
+
+import pdbp.writable.instances.toConsoleWriting.types.ToConsoleWriting
+
+import pdbp.program.instances.types.active.writing.reading.free.freeReadingWritingActiveTypes._
+
+import pdbp.program.instances.active.writing.toConsoleWriting.reading.bigint.free.implicits.freeReadingWritingProgram
+
+import examples.mainPrograms.MainFactorial
+
+object FactorialMain
+    extends MainFactorial[`=>FRWA`[BigInt, ToConsoleWriting]]() {
+
+  override val producer = freeReadingWritingProgram.read
+
+  import examples.utils.implicits.convertFactorialOfBigIntReadToToConsoleWriting
+
+  override val consumer = freeReadingWritingProgram.write
+
+  def main(args: Array[String]): Unit = {
+
+    import pdbp.program.meaning.active.of.writing.toConsoleWriting.reading.bigint.free.implicits.tailrecFoldingReadingEffectExecuting.meaning
+
+    import pdbp.program.runners.active.reading.runner.run
+
+    import examples.utils.implicits.bigIntEffectfullyReadFromConsole
+
+    run(meaning(mainFactorial))
+
+  }
+
+}
+```
+
+Here are some details of `FactorialMain` using effectfree I/0 and the heap that differ from the ones using effectfree I/0 and the stack.
+
+  - `FactorialMain` uses implicit dependency injection by `import` of `freeReadingWritingProgram` that is a program implementation of type `` Program[`=>FRWA`]  ``.   
+
+  - `main` uses implicit dependency injection by `import` of `tailrecFoldingReadingEffectExecuting.meaning` that transforms the program implementation `freeReadingWritingProgram` of type `` Program[`=>FRWA`]  ``to a meaning program implementation of type `` Program[`=>RA`]  ``.
+
+Note that there is, again a lot of `import` flexibility involved.
+
+  - `import pdbp.program.instances.active.writing.toConsoleWriting.reading.bigint.free.implicits.freeReadingWritingProgram` defines the program implementation we use, and, as a consequence, which `factorial` program implementation and `mainFactorial` main program implementation we use.
+
+  - `import pdbp.program.meaning.active.of.writing.toConsoleWriting.reading.bigint.free.implicits.tailrecFoldingReadingEffectExecuting.meaning` defines which program meaning we use, and, as a consequence, which main meaning program implementation `meaning(mainFactorial)` we use.
+  
+  - `import pdbp.program.runners.active.runner.run` defines how to run the `meaning(mainFactorial)` main meaning program implementation.
+
+Let's try `factorial` with `1000` (using `sbt -J-Xss1m`).
+
+```scala
+[info] Running examples.main.active.writing.toConsoleWriting.reading.bigint.tailrecursive.FactorialMain 
+please type an integer to read
+1000
+the factorial value of the integer read is
+402387260077093773543702433923003985719374864210714632543799910429938512398629020592044208486969404800479988610197196058631666872994808558901323829669944590997424504087073759918823627727188732519779505950995276120874975462497043601418278094646496291056393887437886487337119181045825783647849977012476632889835955735432513185323958463075557409114262417474349347553428646576611667797396668820291207379143853719588249808126867838374559731746136085379534524221586593201928090878297308431392844403281231558611036976801357304216168747609675871348312025478589320767169132448426236131412508780208000261683151027341827977704784635868170164365024153691398281264810213092761244896359928705114964975419909342221566832572080821333186116811553615836546984046708975602900950537616475847728421889679646244945160765353408198901385442487984959953319101723355556602139450399736280750137837615307127761926849034352625200015888535147331611702103968175921510907788019393178114194545257223865541461062892187960223838971476088506276862967146674697562911234082439208160153780889893964518263243671616762179168909779911903754031274622289988005195444414282012187361745992642956581746628302955570299024324153181617210465832036786906117260158783520751516284225540265170483304226143974286933061690897968482590125458327168226458066526769958652682272807075781391858178889652208164348344825993266043367660176999612831860788386150279465955131156552036093988180612138558600301435694527224206344631797460594682573103790084024432438465657245014402821885252470935190620929023136493273497565513958720559654228749774011413346962715422845862377387538230483865688976461927383814900140767310446640259899490222221765904339901886018566526485061799702356193897017860040811889729918311021171229845901641921068884387121855646124960798722908519296819372388642614839657382291123125024186649353143970137428531926649875337218940694281434118520158014123344828015051399694290153483077644569099073152433278288269864602789864321139083506217095002597389863554277196742822248757586765752344220207573630569498825087968928162753848863396909959826280956121450994871701244516461260379029309120889086942028510640182154399457156805941872748998094254742173582401063677404595741785160829230135358081840096996372524230560855903700624271243416909004153690105933983835777939410970027753472000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+[success] Total time: 16 s, completed Nov 16, 2018 10:11:07 PM
+
 ```
 
 

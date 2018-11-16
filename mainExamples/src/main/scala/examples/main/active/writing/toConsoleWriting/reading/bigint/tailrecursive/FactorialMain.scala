@@ -1,4 +1,4 @@
-package examples.main.active.writing.toConsole.reading.bigint.tailrecursive
+package examples.main.active.writing.toConsoleWriting.reading.bigint.tailrecursive
 
 //       _______         __    __        _______
 //      / ___  /\       / /\  / /\      / ___  /\

@@ -17,7 +17,7 @@ import pdbp.program.meaning.ProgramMeaning
 
 import pdbp.computation.meaning.ComputationMeaning
 import pdbp.computation.meaning.transformation.ImplicitComputationMeaningTransformation
-import pdbp.computation.meaning.of.reading.reading.ComputationMeaningTransformation
+import pdbp.computation.meaning.of.reading.readingImplicit.ComputationMeaningTransformation
 
 import pdbp.program.instances.types.active.activeTypes._
 import pdbp.program.instances.types.active.reading.readingActiveTypes._

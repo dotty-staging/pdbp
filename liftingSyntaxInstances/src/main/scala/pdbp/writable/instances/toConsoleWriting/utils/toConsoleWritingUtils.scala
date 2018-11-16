@@ -11,9 +11,9 @@ package pdbp.writable.instances.toConsoleWriting.utils
 //  Program Description Based Programming Library
 //  author        Luc Duponcheel        2017-2018
 
-import pdbp.writable.instances.toConsoleWriting.types.ToConsoleWriting
-
 import pdbp.utils.effectfulFunctionUtils._
+
+import pdbp.writable.instances.toConsoleWriting.types.ToConsoleWriting
 
 object toConsoleWritingUtils {
 

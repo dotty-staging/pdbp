@@ -135,7 +135,7 @@ do
          
           $f -ef ./computationSemantics/src/main/scala/pdbp/computation/meaning/IdentityComputationMeaning.scala ||
           $f -ef ./computationSemantics/src/main/scala/pdbp/computation/meaning/of/free/tailrecFolding/ComputationMeaningTransformation.scala ||
-          $f -ef ./computationSemantics/src/main/scala/pdbp/computation/meaning/of/reading/reading/ComputationMeaningTransformation.scala ||
+          $f -ef ./computationSemantics/src/main/scala/pdbp/computation/meaning/of/reading/readingImplicit/ComputationMeaningTransformation.scala ||
           $f -ef ./computationSemantics/src/main/scala/pdbp/computation/meaning/of/writing/toConsoleWriting/effectExecuting/ComputationMeaningTransformation.scala ||
           $f -ef ./computationSemantics/src/main/scala/pdbp/computation/meaning/of/writing/toConsoleWriting/effectExecuting/ComputationMeaningTransformation.scala ||
   

@@ -12,7 +12,7 @@ package pdbp.program.meaning.active.of.reading
 //  author        Luc Duponcheel        2017-2018
 
 import pdbp.computation.meaning.ComputationMeaning
-import pdbp.computation.meaning.of.reading.reading.ComputationMeaningTransformation
+import pdbp.computation.meaning.of.reading.readingImplicit.ComputationMeaningTransformation
 
 import pdbp.program.instances.types.active.activeTypes._
 import pdbp.program.instances.types.active.reading.readingActiveTypes._

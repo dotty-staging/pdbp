@@ -58,10 +58,6 @@ private[pdbp] trait ComputationMeaningTransformation[
 
       override private[pdbp] lazy val unaryTransformation: FTC `~U~>` M =
         new {
-          // @annotation.tailrec
-          // 
-          // the compiler will still optimize calls in tail positions
-          // how cool is that!
           override private[pdbp] def apply[Z](ftcz: FTC[Z]): M[Z] = ftcz match {
             case Transform(cz) =>
               `c~u~>m`(cz)
