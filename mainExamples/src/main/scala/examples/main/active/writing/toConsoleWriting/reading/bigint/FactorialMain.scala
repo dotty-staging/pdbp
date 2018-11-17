@@ -13,6 +13,8 @@ package examples.main.active.writing.toConsoleWriting.reading.bigint
 
 import pdbp.writable.instances.toConsoleWriting.types.ToConsoleWriting
 
+import pdbp.writable.instances.toConsoleWriting.implicits.toConsoleWritingWritable
+
 import pdbp.program.instances.types.active.writing.reading.readingWritingActiveTypes._
 
 import pdbp.program.instances.active.writing.toConsoleWriting.reading.bigint.implicits.readingWritingProgram
@@ -30,7 +32,7 @@ object FactorialMain
 
   def main(args: Array[String]): Unit = {
 
-    import pdbp.program.meaning.active.of.writing.toConsoleWriting.reading.bigint.implicits.readingEffectExecuting.meaning
+    import pdbp.program.meaning.active.of.writing.toConsoleWriting.reading.bigint.implicits.readingImplicitEffectExecuting.meaning
 
     import pdbp.program.runners.active.reading.runner.run
 

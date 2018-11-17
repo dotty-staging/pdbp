@@ -13,6 +13,8 @@ package pdbp.utils
 
 import scala.io.StdIn.readInt
 
+import pdbp.types.product.productType._
+
 object effectfulFunctionUtils {
 
   def effectfulReadBigIntFromConsoleWithMessageFunction(
@@ -21,9 +23,23 @@ object effectfulFunctionUtils {
     BigInt(readInt())
   }
 
-  def effectfulWriteLineToConsoleWithMessageFunction[Y](
+  def effectfulReadArgumentAndResultMultiplierWithMessagesFunction(
+      argumentMessage: String, resultMultiplierMessage: String): Unit => BigInt && BigInt = { _ =>
+    println(argumentMessage)
+    val argument = BigInt(readInt())
+    println(resultMultiplierMessage)
+    val resultMultiplier = BigInt(readInt())
+    (argument, resultMultiplier)          
+  }
+
+  def effectfulWriteToConsoleWithMessageLineFunction[Y](
       message: String): Y => Unit = { y =>
     println(s"$message\n$y")
   }
+
+  def effectfulWriteToConsoleWithMessageFunction[Y](
+      message: String): Y => Unit = { y =>
+    print(s"$message$y")
+  }  
 
 }

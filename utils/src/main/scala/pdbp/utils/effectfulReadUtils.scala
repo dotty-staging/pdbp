@@ -11,11 +11,20 @@ package pdbp.utils
 //  Program Description Based Programming Library
 //  author        Luc Duponcheel        2017-2018
 
+import pdbp.types.product.productType._
+
 import pdbp.utils.effectfulFunctionUtils._
 
 object effectfulReadUtils {
 
   def bigIntEffectfullyReadFromConsoleWithMessage(message: String): BigInt =
     effectfulReadBigIntFromConsoleWithMessageFunction(message)(())
+
+  def argumentAndResultMultiplierEffectfullyReadFromConsoleWithMessages(
+    argumentMessage: String, resultMultiplierMessage: String): BigInt && BigInt =
+    effectfulReadArgumentAndResultMultiplierWithMessagesFunction(
+      argumentMessage, resultMultiplierMessage
+    )(())
+
 
 }

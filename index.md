@@ -2830,7 +2830,7 @@ class EffectfulUtils[>-->[- _, + _]: Program]
     effectfulReadBigIntFromConsoleWithMessage("please type an integer")
 
   lazy val effectfulWriteFactorialOfBigIntToConsole: BigInt >--> Unit =
-    effectfulWriteLineToConsoleWithMessage(
+    effectfulWriteToConsoleWithMessageLine(
       "the factorial value of the integer is")
 
 }
@@ -2855,8 +2855,8 @@ class EffectfulUtils[>-->[- _, + _]: Program] {
       message: String): Unit >--> BigInt =
     function(effectfulReadBigIntFromConsoleWithMessageFunction(message))
 
-  def effectfulWriteLineToConsoleWithMessage[Y](message: String): Y >--> Unit =
-    function(effectfulWriteLineToConsoleWithMessageFunction(message))
+  def effectfulWriteToConsoleWithMessageLine[Y](message: String): Y >--> Unit =
+    function(effectfulWriteToConsoleWithMessageLineFunction(message))
 
 }
 ```
@@ -2876,7 +2876,7 @@ object effectfulFunctionUtils {
     BigInt(readInt())
   }
 
-  def effectfulWriteLineToConsoleWithMessageFunction[Y](
+  def effectfulWriteToConsoleWithMessageLineFunction[Y](
       message: String): Y => Unit = { y =>
     println(s"$message\n$y")
   }
@@ -4687,7 +4687,7 @@ import pdbp.program.meaning.active.of.reading.ReadingMeaning
 
 object implicits {
 
-  implicit object reading
+  implicit object readingImplicit
       extends ReadingMeaning[BigInt] 
       with ComputationMeaningTransformation[BigInt, Active, Active]()
       with ImplicitComputationMeaningTransformation[Active,
@@ -4769,7 +4769,7 @@ object implicits {
 }
 ```
 
-## **`active.of.writing.toConsoleWriting.reading.bigint.readingEffectExecuting`**
+## **`active.of.writing.toConsoleWriting.reading.bigint.readingImplicitEffectExecuting`**
 
 The next computation meaning `implicit object` (and corresponding kleisli program meaning `implicit object`) is the reading, effect executing of to console writing big int reading active one defined below
 
@@ -4805,7 +4805,7 @@ import pdbp.program.meaning.active.of.writing.toConsoleWriting.implicits.effectE
 
 object implicits {
 
-  implicit object readingEffectExecuting
+  implicit object readingImplicitEffectExecuting
       extends ComputationMeaningTransformation[BigInt,
                                                WritingActive[ToConsoleWriting],
                                                Active]()
@@ -4826,7 +4826,7 @@ object implicits {
 }
 ```
 
-## **Running `mainFactorial` using `active.writing.toConsoleWriting.reading.bigint.implicits.readingWritingProgram`, `active.of.writing.toConsoleWriting.reading.bigint.readingEffectExecuting.meaning`, and `active.reading.runner.run`, and using `readingWritingProgram.read` and `readingWritingProgram.write`**
+## **Running `mainFactorial` using `active.writing.toConsoleWriting.reading.bigint.implicits.readingWritingProgram`, `active.of.writing.toConsoleWriting.reading.bigint.readingImplicitEffectExecuting.meaning`, and `active.reading.runner.run`, and using `readingWritingProgram.read` and `readingWritingProgram.write`**
 
 
 Consider
@@ -4853,7 +4853,7 @@ object FactorialMain
 
   def main(args: Array[String]): Unit = {
 
-    import pdbp.program.meaning.active.of.writing.toConsoleWriting.reading.bigint.implicits.readingEffectExecuting.meaning
+    import pdbp.program.meaning.active.of.writing.toConsoleWriting.reading.bigint.implicits.readingImplicitEffectExecuting.meaning
 
     import pdbp.program.runners.active.reading.runner.run
 
@@ -4885,7 +4885,7 @@ object implicits {
 
   implicit val convertFactorialOfBigIntReadToToConsoleWriting
     : BigInt => ToConsoleWriting =
-    toToConsoleWritingLineWithMessage(
+    toToConsoleWritingWithMessageLine(
       "the factorial value of the integer read is"
     )
 
@@ -4918,10 +4918,10 @@ import pdbp.writable.instances.toConsoleWriting.types.ToConsoleWriting
 
 object toConsoleWritingUtils {
 
-  def toToConsoleWritingLineWithMessage[Z](
+  def toToConsoleWritingWithMessageLine[Z](
       message: String): Z => ToConsoleWriting = { z =>
     ToConsoleWriting({ _ =>
-      effectfulWriteLineToConsoleWithMessageFunction(message)(z)
+      effectfulWriteToConsoleWithMessageLineFunction(message)(z)
     })
   }
 
@@ -4956,7 +4956,7 @@ Here are some details of `FactorialMain` using effectfree I/O that differ from t
 
   - `FactorialMain` uses implicit dependency injection by `import` of `convertFactorialOfBigIntReadToToConsoleWriting` convert the `factorial` of the `BigInt` read to a to console writing effect description.
 
-  - `main` uses implicit dependency injection by `import` of `readingEffectExecuting.meaning` that transforms the program implementation `readingWritingProgram` of type `` Program[`=>RWA`]  ``to a meaning program implementation of type `` Program[`=>RA`]  ``.
+  - `main` uses implicit dependency injection by `import` of `readingImplicitEffectExecuting.meaning` that transforms the program implementation `readingWritingProgram` of type `` Program[`=>RWA`]  ``to a meaning program implementation of type `` Program[`=>RA`]  ``.
 
   - `meanng(mainFactorial)` has `` Unit `=>RA` Unit ``, which is `Unit => ReadingActive[Unit]`, which is `` Unit => (BigInt `I=>` Unit) ``
 
@@ -4975,7 +4975,7 @@ Note that there is, again a lot of `import` flexibility involved.
 
   - `import examples.utils.implicits.convertFactorialOfBigIntReadToToConsoleWriting` defines the way we write the `factorial` of the `BigInt` read.
 
-  - `import pdbp.program.meaning.active.of.writing.toConsoleWriting.reading.bigint.implicits.readingEffectExecuting.meaning` defines which program meaning we use, and, as a consequence, which main meaning program implementation `meaning(mainFactorial)` we use.
+  - `import pdbp.program.meaning.active.of.writing.toConsoleWriting.reading.bigint.implicits.readingImplicitEffectExecuting.meaning` defines which program meaning we use, and, as a consequence, which main meaning program implementation `meaning(mainFactorial)` we use.
   
   - `import pdbp.program.runners.active.reading.runner.run` defines how to run the `meaning(mainFactorial)` main meaning program implementation.
 
@@ -5150,7 +5150,7 @@ import pdbp.program.instances.active.reading.bigint.implicits.readingProgram
 import pdbp.program.instances.active.writing.toConsoleWriting.reading.bigint.implicits.readingWritingProgram
 import pdbp.program.instances.active.writing.toConsoleWriting.reading.bigint.free.implicits.freeReadingWritingProgram
 
-import pdbp.program.meaning.active.of.writing.toConsoleWriting.reading.bigint.implicits.readingEffectExecuting
+import pdbp.program.meaning.active.of.writing.toConsoleWriting.reading.bigint.implicits.readingImplicitEffectExecuting
 
 object implicits {
 
@@ -5168,7 +5168,7 @@ object implicits {
       with ProgramMeaning[`=>FRWA`[BigInt, ToConsoleWriting], `=>RA`[BigInt]]() {
 
     override private[pdbp] implicit val implicitComputationMeaning =
-      readingEffectExecuting
+      readingImplicitEffectExecuting
 
   }
 

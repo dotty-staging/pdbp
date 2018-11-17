@@ -40,7 +40,7 @@ import pdbp.program.meaning.active.of.writing.toConsoleWriting.implicits.effectE
 
 object implicits {
 
-  implicit object readingEffectExecuting
+  implicit object readingImplicitEffectExecuting
       extends ComputationMeaningTransformation[BigInt,
                                                WritingActive[ToConsoleWriting],
                                                Active]()

@@ -13,6 +13,8 @@ package examples.main.active.writing.toConsoleWriting.reading.bigint.tailrecursi
 
 import pdbp.writable.instances.toConsoleWriting.types.ToConsoleWriting
 
+import pdbp.writable.instances.toConsoleWriting.implicits.toConsoleWritingWritable
+
 import pdbp.program.instances.types.active.writing.reading.free.freeReadingWritingActiveTypes._
 
 import pdbp.program.instances.active.writing.toConsoleWriting.reading.bigint.free.implicits.freeReadingWritingProgram

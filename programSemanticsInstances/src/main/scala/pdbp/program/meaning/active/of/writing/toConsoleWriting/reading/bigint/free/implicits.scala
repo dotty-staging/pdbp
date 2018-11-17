@@ -29,7 +29,7 @@ import pdbp.program.instances.active.reading.bigint.implicits.readingProgram
 import pdbp.program.instances.active.writing.toConsoleWriting.reading.bigint.implicits.readingWritingProgram
 import pdbp.program.instances.active.writing.toConsoleWriting.reading.bigint.free.implicits.freeReadingWritingProgram
 
-import pdbp.program.meaning.active.of.writing.toConsoleWriting.reading.bigint.implicits.readingEffectExecuting
+import pdbp.program.meaning.active.of.writing.toConsoleWriting.reading.bigint.implicits.readingImplicitEffectExecuting
 
 object implicits {
 
@@ -47,7 +47,7 @@ object implicits {
       with ProgramMeaning[`=>FRWA`[BigInt, ToConsoleWriting], `=>RA`[BigInt]]() {
 
     override private[pdbp] implicit val implicitComputationMeaning =
-      readingEffectExecuting
+      readingImplicitEffectExecuting
 
   }
 

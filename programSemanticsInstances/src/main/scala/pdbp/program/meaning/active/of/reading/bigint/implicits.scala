@@ -30,7 +30,7 @@ import pdbp.program.meaning.active.of.reading.ReadingMeaning
 
 object implicits {
 
-  implicit object reading
+  implicit object readingImplicit
       extends ReadingMeaning[BigInt]
       with ComputationMeaningTransformation[BigInt, Active, Active]()
       with ImplicitComputationMeaningTransformation[Active,
