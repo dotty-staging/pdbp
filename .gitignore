@@ -3,25 +3,27 @@
 /target/
 /types/target/
 /utils/target/
+/kleisli/target/
 /naturalTransformation/target/
 /liftingSyntax/target/
 /writableSyntax/target/
 /programSyntax/target/
 /computationSyntax/target/
 /computationTransformations/target/
-/writableSyntaxInstances/target/
 /programSemantics/target/
 /computationSemantics/target/
-/effectfulMainProgramUtils/target/
+/writableSyntaxInstances/target/
 /programSyntaxInstances/target/
 /programSemanticsInstances/target/
 /programRunners/target/
 /programExampleUtils/target/
 /programExamples/target/
-/effectfulMainExampleUtils/target/
-/effectfulMainExamples/target/
 /mainExampleUtils/target/
 /mainExamples/target/
+/effectfulMainProgramUtils/target/
+/effectfulMainExampleUtils/target/
+/effectfulMainExamples/target/
+
 
 
         

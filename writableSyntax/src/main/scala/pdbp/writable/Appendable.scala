@@ -14,7 +14,7 @@ package pdbp.writable
 import pdbp.types.product.productType._
 import pdbp.types.const.constType._
 
-import pdbp.computation.OperatorLifting
+import pdbp.lifting.OperatorLifting
 
 private[pdbp] trait Appendable[W] extends OperatorLifting[Const[W]] {
 

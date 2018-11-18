@@ -23,6 +23,8 @@ import pdbp.utils.sumUtils._
 import pdbp.program.Program
 import pdbp.program.Applying
 
+import pdbp.lifting.Lifting
+
 private[pdbp] trait Computation[C[+ _]]
     extends Resulting[C]
     with Binding[C]

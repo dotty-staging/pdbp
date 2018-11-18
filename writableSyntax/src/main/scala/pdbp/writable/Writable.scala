@@ -13,6 +13,6 @@ package pdbp.writable
 
 import pdbp.types.const.constType._
 
-import pdbp.computation.Lifting
+import pdbp.lifting.Lifting
 
 trait Writable[W] extends Startable[W] with Appendable[W] with Lifting[Const[W]]

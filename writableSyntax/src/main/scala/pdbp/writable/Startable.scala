@@ -13,7 +13,7 @@ package pdbp.writable
 
 import pdbp.types.const.constType._
 
-import pdbp.computation.ObjectLifting
+import pdbp.lifting.ObjectLifting
 
 private[pdbp] trait Startable[W] extends ObjectLifting[Const[W]] {
 

@@ -17,7 +17,7 @@ import pdbp.types.Thunk
 import pdbp.types.product.productType._
 import pdbp.types.kleisli.unary.kleisliUnaryTypeConstructorType._
 
-import pdbp.computation.Lifting
+import pdbp.lifting.Lifting
 
 private[pdbp] trait ProgramWithLifting[>-->[- _, + _]]
     extends Program[>-->]
