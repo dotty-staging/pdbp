@@ -40,7 +40,7 @@ class FactorialOfArgumentMultipliedByResultMultiplier[
     >-->[- _, + _]: Program
                   : [>-->[- _, + _]] => Reading[ArgumentAndResultMultiplier, >-->]
                   : [>-->[- _, + _]] => Writing[W, >-->]]
-    extends AtomicPrograms[W, >-->]() 
+    extends AtomicPrograms[W, >-->]()
     with HelperPrograms[>-->]() {
 
   private val implicitProgram = implicitly[Program[>-->]]
@@ -50,9 +50,9 @@ class FactorialOfArgumentMultipliedByResultMultiplier[
   private val implicitArgumentAndResultMultiplierReading =
     implicitly[Reading[ArgumentAndResultMultiplier, >-->]]
 
-  import implicitArgumentAndResultMultiplierReading._ 
+  import implicitArgumentAndResultMultiplierReading._
 
-  private val readResultMultiplier = 
+  private val readResultMultiplier =
     read >--> function { (_, resultMultiplier) =>
       resultMultiplier
     }
@@ -69,9 +69,10 @@ class FactorialOfArgumentMultipliedByResultMultiplier[
           multiply
         }
       }
-    }    
+    }
 
-  val factorialMultipliedByResultMultiplier: (Info => W) `I=>` BigInt >--> BigInt =
+  val factorialMultipliedByResultMultiplier
+    : (Info => W) `I=>` BigInt >--> BigInt =
     (factorial & readResultMultiplier) >--> multiply
 
 }

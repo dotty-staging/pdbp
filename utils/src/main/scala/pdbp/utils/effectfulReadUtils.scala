@@ -21,10 +21,11 @@ object effectfulReadUtils {
     effectfulReadBigIntFromConsoleWithMessageFunction(message)(())
 
   def argumentAndResultMultiplierEffectfullyReadFromConsoleWithMessages(
-    argumentMessage: String, resultMultiplierMessage: String): BigInt && BigInt =
+      argumentMessage: String,
+      resultMultiplierMessage: String): BigInt && BigInt =
     effectfulReadArgumentAndResultMultiplierWithMessagesFunction(
-      argumentMessage, resultMultiplierMessage
+      argumentMessage,
+      resultMultiplierMessage
     )(())
-
 
 }

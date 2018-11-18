@@ -1,4 +1,4 @@
-package pdbp.types.prompt
+package pdbp.program.control.types
 
 //       _______         __    __        _______
 //      / ___  /\       / /\  / /\      / ___  /\
@@ -11,4 +11,5 @@ package pdbp.types.prompt
 //  Program Description Based Programming Library
 //  author        Luc Duponcheel        2017-2018
 
+// todo maybe abstract away in Control using a type class
 case class Prompt[A, -Z](l: Long)

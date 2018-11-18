@@ -30,14 +30,15 @@ import examples.mainPrograms.writing.info.reading.argumentAndResultMultiplier.Ma
 import examples.utils.implicits.infoToToConsoleWriting
 
 object FactorialOfArgumentMultipliedByResultMultiplierMain
-    extends MainFactorialOfArgumentMultipliedByResultMultiplier[ToConsoleWriting, `=>RWA`[ArgumentAndResultMultiplier, ToConsoleWriting]]() {
+    extends MainFactorialOfArgumentMultipliedByResultMultiplier[
+      ToConsoleWriting,
+      `=>RWA`[ArgumentAndResultMultiplier, ToConsoleWriting]]() {
 
   import readingWritingProgram._
 
-  override val producer = read >--> function {
-      (factorialArgument, _) =>
-        factorialArgument
-    }
+  override val producer = read >--> function { (factorialArgument, _) =>
+    factorialArgument
+  }
 
   import examples.utils.implicits.convertFactorialOfBigIntReadToToConsoleWriting
 

@@ -26,7 +26,7 @@ h6:before { counter-increment: h6counter; content: counter(h2counter) "." counte
 //  author        Luc Duponcheel        2017-2018
 ```
 
-This document describes a [program description based programming](https://pdbp.github.io/) library.
+This document describes a [program description based programming](https://github.com/PDBP/pdbp) library.
 
 We refer to it as the `PDBP` library.
 
@@ -55,23 +55,21 @@ This document builds upon the ideas of this influential lecture.
 When writing an introduction it is challenging to find the right balance between providing too many details or too few details. 
 
 This introduction
-
   - provides many details,
   - omits some details,
-  - provides details that are repeated in the main part of the document.
+  - provides details that are repeated in the main part of this document.
 
 You have to use your knowlegde and imagination to make sense of it.
 
 It is perfectly fine to first read it diagonally.
 
-I recommend to reread it from time to time once you get more and more acqainted with the content of the rest of the document.
+I recommend to reread it from time to time once you get more and more acqainted with the content of the rest of this document.
 
 ## **Introducing `FP`**
 
 In his Turing Award winning lecture, John Backus describes the [`FP` programming language](https://en.wikipedia.org/wiki/FP_(programming_language)). 
 
 The `FP` programming language consists, roughly speaking, of objects, programs, forms and definitions, where
-
  - a program transforms objects to an object,
  - a form transforms programs to a program,
  - a definition defines a program or a form in terms of programs and forms.
@@ -121,6 +119,8 @@ Think of the members of `trait Composition`, `trait Construction` and `trait Con
 In 1998, John Hughes described arrows and used arrows in `Haskell` in
 [Generalizing monads to arrows](http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.29.4575&rep=rep1&type=pdf).
 
+His work was, among others, inspired by [Deterministic, Error-Correcting Combinator Parsers](http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.80.9967&rep=rep1&type=pdf) described, in 1998, by Doaitse Swierstra and me.
+
 `trait Program` exposes a pointfree programming API for application developers.
 
 `trait Program` is about program descriptions.
@@ -135,7 +135,6 @@ The painting is not a pipe, it is a pipe description.
 In a way programs generalize functions. 
 
  - A function transforms function arguments to yield a function result. 
-
  - A program also, somehow, transforms a program argument to yield a program result. 
 
 When there is no danger of confusion 
@@ -152,8 +151,11 @@ and
   - a program transforms an argument to yield a result, or
   - a program transforms an argument to a result.
 
-Note that we use both (zero or more) arguments (for functions) and (one) argument (for programs).
-The difference between arguments and argument is somewhat superfluous since tuple arguments can represent zero, one or more arguments.
+Note that we use both 
+  - zero or more arguments for functions,
+  - and one argument for programs.
+
+The difference between both is somewhat superfluous since tuple arguments can represent zero, one or more arguments.
 
 ## **Introducing `trait Computation`**
 
@@ -208,7 +210,6 @@ A kleisli program is a function that transforms an argument to yield a computati
 In a way computations generalize expressions. 
 
  - An expression evaluation yields an expression result. 
-
  - A computation execution also, somehow, yields a computation result.
 
 When there is no danger of confusion 
@@ -231,19 +232,16 @@ and
   - a computation has a result.
   
 Recall that, in a way
-
  - programs in general, and kleisli programs in particular, generalize functions, and 
  - computations generalize expressions.
 
 Think of a function as
-
  - an expression template with, to be filled in, unknown parts (its parameters).
    - For example `val function: (Z, Y) => X = { (z, y) => ex(z, y) }`, where `ex(z, y)` is an expression that, somehow, depends on `z` and `y`.
 
 Think of a kleisli program as
-
  - a computation template with a, to be filled in, unknown part (its parameter).
-   - for example `val kleislProgram: (Z, Y) => C[X] = { (z, y) => cx(z, y) }`, where `cx(z, y)` is a computation that, somehow, depends on `z` and `y`.
+   - for example `val kleislProgram: Z => C[Y] = { z => cy(z) }`, where `cy(z)` is a computation that, somehow, depends on `z`.
 
 ## **Power of expression**
 
@@ -254,9 +252,7 @@ In 2008, Sam Lindley, Philip Wadler and Jeremy Yallop compared the power of expr
 [Idioms are oblivious, arrows are meticulous, monads are promiscuous](http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.187.6750&rep=rep1&type=pdf). 
 
  - Monads (cfr. `Computation`) have most power of expression.
-
  - Arrows (cfr. `Program`) are in between.
- 
  - Applicatives (cfr. `Lifting`) have least power of expression. 
 
 Recall that both `Program[Kleisli[C]]` and `Lifting[C]` are mixed-in by `trait Computation[C[+ _]]`.
@@ -284,7 +280,7 @@ Note that `Kleisli[>-->]`, where `>-->` is a binary type constructor, is itself 
 `Lifting[Kleisli[>-->]]` is mixed-in by `trait ProgramWithLifting[>-->[- _, + _]]`. 
 
 `Lifting[Kleisli[>-->]]` can be mixed-in by `trait Program[>-->[- _, + _]]`. 
-Doing this leads to conflicting `Lifting` base types `[+Y] => C[Y]` and `[+Y] => Unit => C[Y]`.
+Doing this leads to conflicting `Lifting` base types `[+Y] => C[Y]` and `[+Y] => Unit => C[Y]` for `trait Computation[C[+ _]]`.
 
 A computation of type `Kleisli[>-->]` is referred to as a kleisli computation. 
 Note that, again, we use a lower case k. 
@@ -305,7 +301,7 @@ private[pdbp] trait ProgramWithApplying[>-->[- _, + _]]
     with Binding[Kleisli[>-->]]
 ```
 
-because the basic `trait`'s mixed-in by `trait Computation` are `trait Resulting` and `trait Binding`.
+because `trait Resulting` and `trait Binding` are the basic `trait`'s, the ones with undefined declared members, mixed-in by `trait Computation`.
 
 ## **Elegance of use**
 
@@ -324,16 +320,17 @@ By using a domain specific language for the domain of programs, program descript
 
 We refer to `PDBP`'s domain specific language for the domain of programs as `PDBP`'s programming DSL.
 
+`PDBP`'s programming DSL defines the syntax of a programming language at the library level.
+
 ## **Our choice** 
 
 `PDBP` goes for kleisli programs, offering
-
- - a slightly less powerful, elegant, pointfree, composition based programming DSL for application developers, and
- - a powerful, slightly less elegant, pointful, result and binding based, computation API for library developers. 
+ - a powerful, slightly less elegant, pointful, result and binding based, computation API for library developers, and
+ - a slightly less powerful, elegant, pointfree, composition based programming DSL for application developers.
 
 We promote that the interaction between pointfree application developers and pointful library developer should be as follows.
 
-If an application developer thinks that the available pointfree programming capabilities are not sufficient for developing his application, then either, when they are sufficient, a library developer should convince the application developer that they are or, when they are not sufficient, a library developer should think of appropriate extra pointfree programming capabilities that are sufficient and implement them as a pointful computational capabilities and corresponding kleisli programming capabilities.
+If an application developer thinks that the available pointfree programming capabilities are not sufficient for developing his application, then either, when they are sufficient, a library developer should convince the application developer that they are or, when they are not sufficient, a library developer should think of appropriate extra pointfree programming capabilities that are sufficient, implement them as a pointful computational capabilities and expose them as corresponding (kleisli) programming capabilities.
 
 ## **Foundations** 
 
@@ -347,7 +344,7 @@ For foundations we refer to [*arrow calculus*](http://homepages.inf.ed.ac.uk/sli
 
 ## **Introducing `factorial` program**
 
-Below is a `factorial` program written using `PDBP`'s programming DSL.
+Below is a `factorial` program written using `PDBP`'s programming DSL (also read: `PDBP`'s programming language syntax).
 
 ```scala
   val factorial: BigInt >--> BigInt =
@@ -364,8 +361,7 @@ Below is a `factorial` program written using `PDBP`'s programming DSL.
 ```
 
 `val factorial` implicitly uses the programming capabilities of `trait Program`. 
-The programming capabilities that are required for the definition of `factorial` are
-
+The programming capabilities that `factorial` makes use are
   - ` ... >--> ... ` (of `trait Composition`), 
   - `` `let` { ... } `in` { ... } `` (of `trait Construction`),  and
   - `` `if`(...) { ... } `else` { ... } ``  (of `trait Condition`),
@@ -375,11 +371,10 @@ The atomic programs, `isZero`, `one`, `subtractOne` and `multiply` that `factori
 ## **Informal description of `factorial`**
 
 Note, again, that `factorial` is a program description.
-Think of `factorial` as syntax that uses the library level `PDBP` programming DSL.
+Think of `factorial` as uses syntax of the library level `PDBP` programming DSL.
 There is no semantics associated with it at all.
 
 Below is an informal description of the semantics of the program description fragments of the `factorial` program description above
-
  - `isZero` is a program description of type `BigInt >--> Boolean`
    - think of `isZero` as a predicate (`Boolean`-valued function) that transforms its argument to the result `true` if it is equal to `0` and to the result `false` otherwise,
  - `one` is a program description of type `Z >--> BigInt`
@@ -390,18 +385,15 @@ Below is an informal description of the semantics of the program description fra
    - think of `multiply` as a function that transforms its arguments to the result obtained by multiplying them.
 
 Note that
-
   - `isZero`, `one` and `subtractOne` are programs with parameter type `BigInt`: one parameter of type `BigInt`,
   - `multiply` is a program with parameter type `BigInt && BigInt`: two parameters of type `BigInt`.
 
 Also note that
-
-  - `one` is a generic program description of type `Z >--> BigInt` for all `Z`
+  - `one` is a generic program description of type `Z >--> BigInt` for all `Z`.
 
 Below is an informal description of the meaning of the program description templates of the `factorial` program description above
-
  - `first >--> second` is part of the `PDBP` programming DSL related to `Composition`
-   - think of `first` as a first function that transforms an argument and `second`as a second function that transforms the result of the first function,
+   - think of `first` as a first function that transforms an argument and `second` as a second function that transforms the result of the first function,
  - `` `let` { constructNewUsingCurrent } `in` { useBothNewAndCurrent } `` is part of the `PDBP` programming DSL related to `Construction`
    - note that `` `let` `` and `` `in` `` are between backticks,
    - think of `constructNewUsingCurrent` as a function that constructs a new value using the current argument,
@@ -476,12 +468,12 @@ Here is a correct `factorial` definition
   }
 ```
 
+Agreed, we might as well have written the correct `factorial` definition.
 The point we want to make is that pointful programming, because it is more complex than pointfree programming, is inherently more difficult.
 Human brains can only deal with a limited amount of complexity.
 
 `val factorial` implicitly uses the computational capabilities of `trait Computation`. 
-The computational capabilities that are required for the definition of `factorial` are
-
+The computational capabilities that `factorial` makes use of are
   - `bind` (of `trait Binding`). 
 
 The atomic kleisli programs, `isZero`, `one`, `subtractOne` and `multiply` that `factorial` makes use of are defined in a much simpler way, and only use the programming capabilities of `trait Resulting`. 
@@ -493,30 +485,26 @@ Recall that programs have type `Z >--> Y` for types `Z` and `Y`.
 For example: `factorial` has type `BigInt >--> BigInt`.
 
 If
-
  - `producer` is a producer program of type `Unit >--> Z`,
  - `program` is a program of type `Z >--> Y`,
  - `consumer` is a consumer program of type `Y >--> Unit`,
 
 then
-
  - `producer >--> program >--> consumer` is a main program of type `Unit >--> Unit`.
 
 We also simply refer to 
-
   - a producer program as a producer,
   - a consumer program as a consumer.
-  
-We also refer to
-  - a main program as a service.
 
 Programs are design artifacts that, among others, are combined using composition
   - when given two programs, the result of the first one is the argument of the second one.
 
-Services are architectural artifacts that are combined using I/O 
+Main programs are architectural artifacts that are combined using I/O 
   - when given two main programs, the output produced by the first one is the input consumed by the second one.
 
-There is a tendency to keep both programs and main programs (services) relatively small.
+We also refer to main programs as a services.
+
+There is a tendency to keep both programs and main services relatively small.
 
 Relatively small services are often referred to as microservices.
 
@@ -545,9 +533,9 @@ Exploiting the flexibility that comes with those differences is the most importa
  - `PDBP` is homogeneous,
    - programs are objects (values). 
 
-Programs are defined as members of `class`es that are declared to have the programming capabilities declared in `trait Program`.
-Those capabilities can be made available by `import`-ing them.
-Many programming capabilities come with an operator equivalent that can also be made be made available by `import`-ing them.
+Programs are defined as members of `class`es that are declared to implicitly have the programming capabilities available that are declared in `trait Program`.
+Many programming capabilities come with an operator equivalent.
+They are made available by `import`-ing them.
 
 Programming with `PDBP` is a lot about passing around programming capabilities.
 
@@ -564,33 +552,31 @@ Programming with `PDBP` is a lot about passing around programming capabilities.
    - programs have fixed semantics
    - the implementation of `FP` defines the semantics of programs.
  - in `PDBP,`
-   - programs, defined as members of `class`es, declared to implicitly have programming capabilities, have flexible semantics using
+   - programs have flexible semantics using
      - `implicit object`'s that `extend trait Program`
        - both simple `implicit object`'s and complex ones obtained by naturally transforming simpler ones, 
      - program implementations that, indirectly, depend on those `implicit object`'s
        - program implementations are made are available as members of `object`'s that, directly depending on those `implicit object`'s, `extend` the `class`es in which programs are defined as members. 
-     - `implicit object`'s that `extend trait ProgramMeaning`, that naturally transform those program implementations to program meanings
+     - `implicit object`'s that `extend trait ProgramMeaning`, that naturally transform those program implementations to meaning programs
        - both simple `implicit object`'s and complex ones obtained by natural transformation composition with simpler ones,
-     - run utilities that run main program meanings
+     - run utilities that run main meaning programs
        - both simple run utilities and complex ones.   
 
-Agreed, the statements above, and the vocabulary they make use of, may seem daunting at first sight, but they will become more familiar later in this document.
+Agreed, the statements above, and the vocabulary they make use of, may seem daunting at first sight, but they become more familiar later in this document.
 
 Let's rephrase the statements
   - we define a type class `trait Program`,
-  - we define programs as members of `class`es that are declared to implicitly have the programming capabilities of `trait Program`,
+  - we define programs as members of `class`es that are declared to implicitly have the programming capabilities available that are declared in `trait Program`,
   - we define `object`'s that `extend` those `class`es using dependency injection by `import` of `implicit object`'s that `extend` `trait Program`, making program implementations available as members of those `object`'s,
-  - we define program meanings by naturally transforming those program implementations using dependency injection by `import` of `implicit object`'s that `extend trait ProgramMeaning`,
-  - we run main program meanings by making use of run utilities.
+  - we define meaning programs by naturally transforming those program implementations using dependency injection by `import` of `implicit object`'s that `extend trait ProgramMeaning`,
+  - we run main meaning programs by making use of run utilities.
 
-We also refer to transforming program implementations as as changing programming semantics.
+We also refer to transforming program implementations as as defining programming semantics.
 
+Note that `factorial` has recursive program syntax (`factorial` uses `factorial`).
+It can, for example, be given both a stack based semantics and a heap based semantics.
 
 Strictly speaking, since `trait ProgramMeaning` is not a type class, the `object`'s that `extend` `trait ProgramMeaning` do not need to be `implicit object`'s, however, it is convenient that they are.
-
-Note that `factorial` is a recursive `PDBP` program (`factorial` uses `factorial`).
-
-It can be given both a stack based meaning and a heap based meaning.
 
 ## **Extra programming capabilities**
 
@@ -600,16 +586,18 @@ It can be given both a stack based meaning and a heap based meaning.
    - the capabilities of the type class `trait Program` can be extended by mixing-in extra `traits`'s.
 
 Extra programming capabilities can be added such as
-
  - state manipulation,
- - failure handling (we do this by trying),
- - latency handling (we do this by going reactive),
- - advanced control handling (we do this by using delimited continuations),
- - ...
+ - failure handling 
+   - we do this by trying,
+ - latency handling
+   - we do this by going reactive,
+ - advanced control handling 
+   - we do this by using delimited continuations,
+ - ... .
 
 Note that `Program` already has basic control handling capabilities (the ones of `Condition`).
 
-We also refer to adding programming capabilities as extending programming syntax.
+We also refer to adding programming capabilities as extending programming language syntax.
 
 ## **I/O**
 
@@ -619,8 +607,7 @@ We also refer to adding programming capabilities as extending programming syntax
    - input and output are effectfree, they describe I/O effects in an pure way. 
 
 Programming capabilities can be added related to
-
- - input reading
+ - input reading, and
  - output writing
   
 A program description involving I/O can, for example, be given 
@@ -630,8 +617,8 @@ A program description involving I/O can, for example, be given
 Reading and writing capabilities are, more or less, declared as
 
 ```scala
-  trait Reading[Z, >-->[- _, + _]] {
-    def read: Unit >--> Z
+  trait Reading[R, >-->[- _, + _]] {
+    def read: Unit >--> R
   }
 ```
 
@@ -652,12 +639,11 @@ Syntactically, `read` and `write` describe reading and writing effects in a pure
 They come into play when defining main program descriptions.
 
 Semantically, `read` and `write` may execute reading and writing effects in an impure way.
-Eventually, they come into play when running main program meanings.
+Eventually, they come into play when running main meaning programs.
 
 ## **Goal of the `PDBP` library**
 
 The goal of the `PDBP` library is to illustrate that program description based programming using a pointfree style in `Dotty` is 
-
  - powerful
    -  as a library developer you can use the expressive power of computations,
    -  as an application developer you can use the expressive power of programs,
@@ -692,24 +678,34 @@ The concepts below
    
 come in later.
 
+You may ask yourself why we go for arrows (`trait Program`) instead of applicatives (`trait Lifing`).
+After all, working with applicatives boils down to defining functions and lifting them to the computation (and corresponding kleisli program) world.
+
+We may not really have a convincing answer but note that
+  - Coding programs in a pointfree way is not really more challenging than coding functions in a pointfree way, and
+    - Coding programs can only be done in a pointfree way using `PDBP`'s programming DSL (also read: `PDBP`'s programming language syntax).
+    - Coding programs can both be done in a pointful way and a in pointfree way, and, as such, requires application developer discipline to be done in pointfree way.
+
 To finish, we claim that
 
  - Pointfree program description based application programming naturally leads to deep insights into the nature of programs (remember: programs generalize functions). It requires you, as an application developer, to reason at an appropriate elegant (and reasonably powerful) level of abstraction. 
  - Pointful computation description based library programming naturally leads to deep insights into the nature of computations (remember: computations generalize expressions). It allows you, as a library developer, to reason at an appropriate, powerful (and reasonably elegant) level of abstraction.
 
-Hopefully, the statements above sound exiting to both programmers with and programmers without a background in computer science.
+Hopefully, the (some of the) statements above sound exiting to both programmers with and programmers without a background in computer science.
 
 ## **Lazyness**
 
-`Dotty` has call-by-value and call-by-name parameters, but it does not have lazy parameters.
+`Dotty` has call-by-value and call-by-name parameters, but it does not have lazy parameters (yet, see[Add support for lazy (explicit|implicit) parameters #3005](https://github.com/lampepfl/dotty/issues/3005)).
 
 The first thing we define is a low-down-dirty lazyness implementation to overcome this limitation.
 
 The implementation makes use of implictt functions.
+We make use of implictt functions for many other  implementations as well.
+
 Groundbraking work by Martin Odersky, [Simplicity](https://infoscience.epfl.ch/record/229878/files/simplicitly_1.pdf), introduces implicit functions. 
 Implicit functions replace boilerplate repetition of `implicit` parameters by an implicitly available global value, `implicitly`. 
 You may argue that this is going back to the past since, for years, using globals has been considered to be harmful. 
-In fact, instead it is going back to the future since the global value `implicitly` is only available in a context where the type system can infer that it is available.
+In fact, instead, it is going back to the future since the global value `implicitly` is only available in a context where the type system can infer that it is available.
 
 Implicit function types are types like other ones.
 It is convenient to define a type alias for them as follows
@@ -724,27 +720,7 @@ object implicitFunctionType {
 }
 ```
 
-Below is the definition of an `implicit val implicitUnit` of type `Unit`. 
-
-```scala
-package pdbp.types
-
-object implicitUnit {
-
-  implicit val implicitUnit: Unit = ()
-
-}
-```
-
-A thunk is, in essence, an implicit function of type `` Unit `I=>` Z ``.
-
-Wherever `implicit val implicitUnit` is available, we can 
-
- - make use of values of type `` Unit `I=>` Z `` as value of type `Z`, and
- - make use of values of type `Z` as value od type `` Unit `I=>` Z ``.
-
-The code below illustrates the former 
-
+Consider
 
 ```scala
 package pdbp.types
@@ -759,9 +735,31 @@ case class Thunk[+Z](`ui=>z`: Unit `I=>` Z) {
 
 ```
 
-`eval` uses `` `ui=>z` ``, a value of type `` Unit `I=>` Z ``, as value of type `Z`.
+where
 
-The `REPL` session below illustrates the latter.
+```scala
+package pdbp.types
+
+object implicitUnit {
+
+  implicit val implicitUnit: Unit = ()
+
+}
+```
+
+A thunk is, in essence, an implicit function of type `` Unit `I=>` Z ``.
+
+Wherever `implicit val implicitUnit` is available, we can 
+ - make use of values of type `` Unit `I=>` Z `` as value of type `Z`.
+
+For example, `eval` uses `` `ui=>z` ``, a value of type `` Unit `I=>` Z ``, as value of type `Z`.
+
+If `thunk` is a thunk, then `thunk.eval` can be thought of as an evaluated version of `thunk` that can be used as a cache rather than using `thunk` itself.
+
+Likewise, wherever `implicit val implicitUnit` is available, we can 
+ - make use of values of type `Z` as value of type `` Unit `I=>` Z ``.
+
+For example, the `REPL` session below illustrates the latter.
 The session compares call-by-value parameters, call-by-name parameters and our implementation of lazy parameters.
 
 ```scala
@@ -815,6 +813,8 @@ scala> lazyZero(Thunk({ println("evaluating") ; 1}))
 val res5: Int = 0
 ```
 The last two expressions use `{ println("evaluating") ; 1}`, a value of type `Int` as value of type `` Unit `I=>` Int ``.
+
+Now that we have defined our low-down-dirty lazyness implementation we can proceed with the core part of this document. 
 
 ## **`trait Program`**
 

@@ -24,12 +24,13 @@ object effectfulFunctionUtils {
   }
 
   def effectfulReadArgumentAndResultMultiplierWithMessagesFunction(
-      argumentMessage: String, resultMultiplierMessage: String): Unit => BigInt && BigInt = { _ =>
+      argumentMessage: String,
+      resultMultiplierMessage: String): Unit => BigInt && BigInt = { _ =>
     println(argumentMessage)
     val argument = BigInt(readInt())
     println(resultMultiplierMessage)
     val resultMultiplier = BigInt(readInt())
-    (argument, resultMultiplier)          
+    (argument, resultMultiplier)
   }
 
   def effectfulWriteToConsoleWithMessageLineFunction[Y](
@@ -40,6 +41,6 @@ object effectfulFunctionUtils {
   def effectfulWriteToConsoleWithMessageFunction[Y](
       message: String): Y => Unit = { y =>
     print(s"$message$y")
-  }  
+  }
 
 }

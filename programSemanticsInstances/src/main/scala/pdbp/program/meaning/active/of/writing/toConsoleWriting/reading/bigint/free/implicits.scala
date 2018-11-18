@@ -42,8 +42,9 @@ object implicits {
         ReadingActive[BigInt],
         FreeReadingWritingActive[BigInt, ToConsoleWriting],
         ReadingActive[BigInt]]()
-      with ComputationMeaning[FreeReadingWritingActive[BigInt, ToConsoleWriting],
-                              ReadingActive[BigInt]]()
+      with ComputationMeaning[
+        FreeReadingWritingActive[BigInt, ToConsoleWriting],
+        ReadingActive[BigInt]]()
       with ProgramMeaning[`=>FRWA`[BigInt, ToConsoleWriting], `=>RA`[BigInt]]() {
 
     override private[pdbp] implicit val implicitComputationMeaning =

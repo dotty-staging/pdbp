@@ -17,12 +17,9 @@ object failureUtils {
 
   def safely[T](
       handler: PartialFunction[Throwable, T]): PartialFunction[Throwable, T] = {
-    case t: ControlThrowable =>
-      throw t
-    case t: Throwable if handler.isDefinedAt(t) =>
-      handler(t)
-    case t: Throwable =>
-      throw t
+    case t: ControlThrowable                    => throw t
+    case t: Throwable if handler.isDefinedAt(t) => handler(t)
+    case t: Throwable                           => throw t
   }
 
 }

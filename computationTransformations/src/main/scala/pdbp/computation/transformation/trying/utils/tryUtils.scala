@@ -1,4 +1,4 @@
-package examples.utils
+package pdbp.computation.transformation.trying.utils
 
 //       _______         __    __        _______
 //      / ___  /\       / /\  / /\      / ___  /\
@@ -11,16 +11,21 @@ package examples.utils
 //  Program Description Based Programming Library
 //  author        Luc Duponcheel        2017-2018
 
-import pdbp.program.Program
+import pdbp.types.product.productType._
 
-class EffectfulUtils[>-->[- _, + _]: Program]
-    extends pdbp.program.utils.EffectfulUtils[>-->] {
+import pdbp.computation.transformation.trying.types.tryType._
 
-  lazy val effectfulReadBigIntFromConsole: Unit >--> BigInt =
-    effectfulReadBigIntFromConsoleWithMessage("please type an integer")
+object tryUtils {
 
-  lazy val effectfulWriteFactorialOfBigIntToConsole: BigInt >--> Unit =
-    effectfulWriteToConsoleWithMessageLine(
-      "the factorial value of the integer is")
+  def fold[Z, Y]: ((Z => Y) && (Throwable => Y)) => (Try[Z] => Y) = {
+    case (z2y, t2y) => {
+      case Ok(z) =>
+        val y = z2y(z)
+        y
+      case Ko(t) =>
+        val y = t2y(t)
+        y
+    }
+  }
 
 }

@@ -29,7 +29,8 @@ object implicits {
     bigIntEffectfullyReadFromConsoleWithMessage(
       "please type an integer to read")
 
-  implicit lazy val argumentAndResultMultiplierEffectfullyReadFromConsole: BigInt && BigInt =
+  implicit lazy val argumentAndResultMultiplierEffectfullyReadFromConsole
+    : BigInt && BigInt =
     argumentAndResultMultiplierEffectfullyReadFromConsoleWithMessages(
       "please type an integer argument to read",
       "please type an integer result multiplier to read"
@@ -45,6 +46,6 @@ object implicits {
     ToConsoleWriting({ _ =>
       effectfulWriteToConsoleWithMessageFunction("")(info.toString)
     })
-  }    
+  }
 
 }

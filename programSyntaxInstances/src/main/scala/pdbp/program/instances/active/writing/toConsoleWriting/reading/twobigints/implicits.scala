@@ -39,14 +39,18 @@ object implicits {
 
   implicit object readingWritingProgram
       extends ReadingWritingProgram[BigInt && BigInt, ToConsoleWriting]()
-      with Computation[ReadingWritingActive[BigInt && BigInt, ToConsoleWriting]]()
+      with Computation[
+        ReadingWritingActive[BigInt && BigInt, ToConsoleWriting]]()
       with Program[`=>RWA`[BigInt && BigInt, ToConsoleWriting]]()
-      with Reading[BigInt && BigInt, `=>RWA`[BigInt && BigInt, ToConsoleWriting]]()
-      with Writing[ToConsoleWriting, `=>RWA`[BigInt && BigInt, ToConsoleWriting]]()
+      with Reading[BigInt && BigInt,
+                   `=>RWA`[BigInt && BigInt, ToConsoleWriting]]()
+      with Writing[ToConsoleWriting,
+                   `=>RWA`[BigInt && BigInt, ToConsoleWriting]]()
       with ComputationTransformation[
         WritingActive[ToConsoleWriting],
         ReadingWritingActive[BigInt && BigInt, ToConsoleWriting]]()
-      with ReadingTransformation[BigInt && BigInt, WritingActive[ToConsoleWriting]]()
+      with ReadingTransformation[BigInt && BigInt,
+                                 WritingActive[ToConsoleWriting]]()
       with ComputationWritingTransformation[
         ToConsoleWriting,
         WritingActive[ToConsoleWriting],

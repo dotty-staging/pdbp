@@ -18,13 +18,13 @@ import pdbp.types.product.productType._
 
 import pdbp.types.kleisli.binary.kleisliBinaryTypeConstructorType._
 
-import pdbp.types.prompt.Prompt
-
 import pdbp.naturalTransformation.unary.`~U~>`
 
 import pdbp.program.Program
 
 import pdbp.program.state.State
+
+import pdbp.program.control.types.Prompt
 
 import pdbp.program.control.Control
 

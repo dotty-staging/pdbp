@@ -11,10 +11,10 @@ package pdbp.program.control
 //  Program Description Based Programming Library
 //  author        Luc Duponcheel        2017-2018
 
-import pdbp.types.prompt.Prompt
-
 import pdbp.program.Function
 import pdbp.program.Composition
+
+import pdbp.program.control.types.Prompt
 
 trait Control[A, >-->[- _, + _]] {
   this: Function[>-->] & Composition[>-->] =>

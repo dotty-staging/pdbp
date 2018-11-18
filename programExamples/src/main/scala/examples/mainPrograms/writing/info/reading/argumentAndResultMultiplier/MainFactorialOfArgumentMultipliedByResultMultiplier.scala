@@ -32,8 +32,8 @@ trait MainFactorialOfArgumentMultipliedByResultMultiplier[
                   : [>-->[- _, + _]] => Reading[ArgumentAndResultMultiplier, >-->]
                   : [>-->[- _, + _]] => Writing[W, >-->]] {
 
-  private object factorialOfArgumentMultipliedByResultMultiplierObject 
-    extends FactorialOfArgumentMultipliedByResultMultiplier[W, >-->]
+  private object factorialOfArgumentMultipliedByResultMultiplierObject
+      extends FactorialOfArgumentMultipliedByResultMultiplier[W, >-->]
 
   import factorialOfArgumentMultipliedByResultMultiplierObject.factorialMultipliedByResultMultiplier
 
@@ -41,7 +41,8 @@ trait MainFactorialOfArgumentMultipliedByResultMultiplier[
 
   val consumer: BigInt >--> Unit
 
-  lazy val mainFactorialMultipliedByResultMultiplier: (Info => W) `I=>` Unit >--> Unit =
+  lazy val mainFactorialMultipliedByResultMultiplier
+    : (Info => W) `I=>` Unit >--> Unit =
     producer >-->
       factorialMultipliedByResultMultiplier >-->
       consumer

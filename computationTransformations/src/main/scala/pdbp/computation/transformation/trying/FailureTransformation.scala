@@ -15,11 +15,9 @@ import pdbp.types.implicitUnit._
 import pdbp.types.implicitFunctionType._
 import pdbp.types.Thunk
 import pdbp.types.product.productType._
-import pdbp.types.trying.tryType._
 import pdbp.types.kleisli.binary.kleisliBinaryTypeConstructorType._
 
 import pdbp.utils.failureUtils._
-import pdbp.utils.tryingUtils._
 
 import pdbp.naturalTransformation.unary.`~U~>`
 
@@ -29,6 +27,10 @@ import pdbp.program.failure.Failure
 import pdbp.computation.Computation
 
 import pdbp.computation.transformation.ComputationTransformation
+
+import pdbp.computation.transformation.trying.types.tryType._
+
+import pdbp.computation.transformation.trying.utils.tryUtils._
 
 private[pdbp] object FailureTransformation {
 

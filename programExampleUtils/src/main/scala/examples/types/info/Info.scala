@@ -19,7 +19,7 @@ case class Info(what: String) {
   override def toString = {
     val simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS")
     val when = simpleDateFormat.format(new Date())
-    val who = Thread.currentThread.getId() 
+    val who = Thread.currentThread.getId()
     s"[INFO] when $when who $who what $what\n"
   }
 

@@ -35,11 +35,13 @@ object implicits {
   implicit object readingImplicit
       extends ReadingMeaning[BigInt && BigInt]
       with ComputationMeaningTransformation[BigInt && BigInt, Active, Active]()
-      with ImplicitComputationMeaningTransformation[Active,
-                                                    Active,
-                                                    ReadingActive[BigInt && BigInt],
-                                                    ReadingActive[BigInt && BigInt]]()
-      with ComputationMeaning[ReadingActive[BigInt && BigInt], ReadingActive[BigInt && BigInt]]()
+      with ImplicitComputationMeaningTransformation[
+        Active,
+        Active,
+        ReadingActive[BigInt && BigInt],
+        ReadingActive[BigInt && BigInt]]()
+      with ComputationMeaning[ReadingActive[BigInt && BigInt],
+                              ReadingActive[BigInt && BigInt]]()
       with ProgramMeaning[`=>RA`[BigInt && BigInt], `=>RA`[BigInt && BigInt]]()
 
 }
