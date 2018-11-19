@@ -3250,19 +3250,17 @@ Below are the next steps towards associating semantics with syntactic program de
  - Define the `meaning` member of `trait ProgramMeaning` in `object`'s that `extend trait ProgramMeaning`.  
  - Use program meanings to naturally transform program implementations.
 
-We refer to a program implementation that is transformed using a program meaning as a program implementation meaning. 
+We refer to a program implementation that is transformed using a program meaning as a meaning program implementation. 
 
-We refer to a main program implementation that is transformed using a program meaning as a main program implementation meaning. 
+We refer to a main program implementation that is transformed using a program meaning as a main meaning program implementation. 
 
-We refer to a meaning program of a program implementation as a meaning program implementation.
+We refer to a klesisli program implementation that is transformed using a program meaning as a kleisli meaning program implementation. 
 
-We refer to a meaning program of a main program implementation as a main meaning program implementation.
+We refer to a main kleisli program implementation that is transformed using a program meaning as a main kleisli meaning program implementation. 
 
 Although. since `trait ProgramMeaning` is not a type class, it is not necessary to define `implicit object`'s it is convenient to do so. 
 
-#### UNTIL HERE
-
-## **`active.of.active.identity`**
+## **`active.of.active.implicits.identity.meaning`**
 
 The first computation meaning `implicit object` (and corresponding kleisli program meaning `implicit object`) is the identity meaning of active one defined below
 
@@ -3415,38 +3413,32 @@ private[pdbp] trait FreeTransformation[C[+ _]: Computation]
 `trait Free` is an abstract data type that 
 
 either is a
-
   - `case class Result`, or a
   - `case class Bind` 
 
 corresponding to the members 
-
   - `result` and 
   - `bind` 
   
 of `trait Computation`.
 
 or is a
-
   - `case class Transform`
 
 corresponding to the member 
-
   - `transform` 
  
 of `trait ComputationTransformation`,
 
 `trait FreeTransformation` transforms 
-
   - a computation `C` to a computation `FreeTransformed[C]`,
   - the corresponding kleisli program `Kleisli[C]` to a kleisli program `Kleisli[FreeTransformed[C]]`. 
 
-The definitions of `transform`, `result` and `bind` are trivial.
+The definitions of `result`, `bind` and `transform` are trivial.
 They construct a data structure on the heap.
-
- - `transform` constructs a `Transform`,
  - `result` constructs a `Result`,
- - `bind` constructs a `Bind`.
+ - `bind` constructs a `Bind`,
+ - `transform` constructs a `Transform`.
 
 Think of `Free[C, Z]` as a free data type wrapped around `C` as described in [Data types a la carte](http://www.cs.ru.nl/~W.Swierstra/Publications/DataTypesALaCarte.pdf).
 
@@ -3455,10 +3447,10 @@ Note that `result` and `bind` do not use the computational capabilities of `C` a
 
 The data structure `Free[C, Z]` is also used to wrap, using `Transform`, the computational capabilities of `C` to suspended computational capabilities of type `Free[C, Z]`.
  
-In a way `Free[C, Z]` is the most free implementation one can think of because there are no constraints involved.
+In a way `Free[C, Z]` is the most free implementation one can think of because there are no computational constraints involved.
 
 Anyway, `Free[C, Z]` is an implementation, it is not a description. 
-Some implementation choice has been taken, abeit the one to build a data structure without taking into account any constraints.
+Some implementation choice has been taken, abeit the one to build a data structure without taking into account any computational constraints.
 
 ## **`active` implicit `freeProgram`**
 
@@ -3598,16 +3590,16 @@ Note that, for pattern matching, we use names like `y2ftcz` instead of `` `y=>ft
 
 Also note that the `package` name refers to what (`of.free`) and how (`tailrecFolding`).
 
-The method `apply` that defines `unaryTransformation` of `tailrecFoldingComputationMeaning` is a tail recursive folding of a computation of type `FTC[Z]`, a free data structure wrapping a computation of type `C[Z]`, to a meaning computation of type `M[Z]`. 
+The method `apply` that defines `unaryTransformation` of `tailrecFoldingComputationMeaning` is a folding of a computation of type `FTC[Z]`, a free data structure wrapping a computation of type `C[Z]`, to a meaning computation of type `M[Z]`.
 
 Note that the last `case` for `Bind` uses an associativity law of `bind`.
-The left associated `Bind`'s are folded to right associated `Bind`'s. 
+The left associated `Bind`'s are folded to right associated `Bind`'s (how cool is that!). 
 
 Note that we do not annotate `apply` with `@annotation.tailrec`. 
-The compiler would complain because the call to `apply` in the second `case` is not in tail position.
-Luckily, the compiler optimizes all other calls because they are all in tail position.
+The compiler would complain because the call to `apply` in the nested `Transform` case is not in tail position.
+Luckily, the compiler optimizes all other calls because they are all in tail position (how cool is that!).
 
-## **`active.of.free.tailrecFolding`**
+## **`active.of.free.implicits.tailrecFolding`**
 
 The next computation meaning `implicit object` (and corresponding kleisli program meaning `implicit object`) is the tail recursive folding of free active one defined below
 
@@ -3715,6 +3707,8 @@ the factorial value of the integer is
 ```
 
 We do not have stack which overflow for the argument `1000` any more since we use the heap now together with tail recursion (ok, we can have an out of memory exception, but that's another story). 
+
+#### UNTIL HERE
 
 ## **`Reading` and `Writing`**
 
